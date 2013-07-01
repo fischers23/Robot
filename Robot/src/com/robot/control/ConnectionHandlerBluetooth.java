@@ -25,10 +25,10 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 	InputStream mmInputStream;
 	byte[] readBuffer;
 	String deviceName;
-	MainControl mActivity;
+	ControlUnits mActivity;
 	int readBufferPosition;
 
-	public ConnectionHandlerBluetooth(MainControl activity, String deviceName) {
+	public ConnectionHandlerBluetooth(ControlUnits activity, String deviceName) {
 		mActivity = activity;
 		this.deviceName = deviceName;
 		enableBluetooth();
@@ -97,50 +97,49 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 		readBufferPosition = 0;
 		readBuffer = new byte[1024];
 		
-	    // Handler gets created on the UI-thread
-	    Handler mHandler = mActivity.getWindow().getDecorView().getHandler();
-	    
-	    // This gets executed in a non-UI thread:
-	        mHandler.post(new Runnable() {
-	            @Override
-	            public void run() {
-	            	try {
-						int bytesAvailable = mmInputStream.available();
-						if (bytesAvailable > 0) {
-							byte[] packetBytes = new byte[bytesAvailable];
-							mmInputStream.read(packetBytes);
-							for (int i = 0; i < bytesAvailable; i++) {
-								byte b = packetBytes[i];
-								if (b == delimiter) {
-									byte[] encodedBytes = new byte[readBufferPosition];
-									System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-									final String data = new String(encodedBytes, "US-ASCII");
-									readBufferPosition = 0;
-
-									float fl = Float.valueOf(data);
-									mActivity.distanceLabel.setText(Integer.toString((int)fl));
-
-									
-								} else {
-									readBuffer[readBufferPosition++] = b;
-								}
-							}
-						}
-					} catch (Exception ex) {}
-	            	
-	            }
-	        });
+//	    // Handler gets created on the UI-thread
+//	    Handler mHandler = mActivity.getWindow().getDecorView().getHandler();
+//	    
+//	    // This gets executed in a non-UI thread:
+//	        mHandler.post(new Runnable() {
+//	            @Override
+//	            public void run() {
+//	            	try {
+//						int bytesAvailable = mmInputStream.available();
+//						if (bytesAvailable > 0) {
+//							byte[] packetBytes = new byte[bytesAvailable];
+//							mmInputStream.read(packetBytes);
+//							for (int i = 0; i < bytesAvailable; i++) {
+//								byte b = packetBytes[i];
+//								if (b == delimiter) {
+//									byte[] encodedBytes = new byte[readBufferPosition];
+//									System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
+//									final String data = new String(encodedBytes, "US-ASCII");
+//									readBufferPosition = 0;
+//
+//									float fl = Float.valueOf(data);
+//									mActivity.distanceLabel.setText(Integer.toString((int)fl));
+//
+//									
+//								} else {
+//									readBuffer[readBufferPosition++] = b;
+//								}
+//							}
+//						}
+//					} catch (Exception ex) {}
+//	            	
+//	            }
+//	        });
 	    
 
 	}
 
-	public int getDistance() {
-		return 0;
-		//return distance;
-	}
+//	public int getDistance() {
+//		return distance;
+//	}
 
 	public void showSettingsAlert() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity.getActivity());
 		alertDialog.setTitle("BT settings");
 		alertDialog.setMessage("BT is not enabled. Do you want to go to settings menu?");
 
