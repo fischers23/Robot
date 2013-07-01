@@ -15,10 +15,24 @@
         android:layout_height="wrap_content"
         android:text="Connect" 
         android:visibility="invisible"/>
-    <TextView 
-        android:id="@+id/sendtxt"
-        android:layout_width="fill_parent"
+ 
+
+    <EditText
+        android:id="@+id/sendTxt"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Send Msg"/>"
+        android:ems="10"
+        android:hint="Send text"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send" 
+        android:visibility="invisible"/>"
 
 </LinearLayout>
