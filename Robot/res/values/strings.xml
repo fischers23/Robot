@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Robot</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="ButtonTextConnect">disconnected</string>
+    <string name="ButtonTectDisconnect">connected</string>
+    <string name="ButtonTextOn">On</string>
+    <string name="ButtonTextOff">Off</string>
+    <string name="Activated">activated</string>
+    <string name="Deactivated">deactivated</string>
+    <string name="connect">connect</string>
+    <string name="gyro">gyro</string>
+
+</resources>
