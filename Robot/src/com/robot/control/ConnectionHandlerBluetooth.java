@@ -135,7 +135,8 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 	}
 
 	public int getDistance() {
-		return distance;
+		return 0;
+		//return distance;
 	}
 
 	public void showSettingsAlert() {
