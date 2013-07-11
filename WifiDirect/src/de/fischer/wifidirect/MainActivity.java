@@ -6,21 +6,26 @@ import java.util.Iterator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
-public class MainActivity extends Activity implements PeerListListener {
+public class MainActivity extends Activity implements PeerListListener,
+		ConnectionInfoListener {
 
 	WifiP2pManager mManager;
 	Channel mChannel;
@@ -28,7 +33,9 @@ public class MainActivity extends Activity implements PeerListListener {
 	IntentFilter mIntentFilter;
 	Button search;
 	Button connect;
+	Button send;
 	Collection<WifiP2pDevice> list;
+	WifiP2pInfo info;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +102,39 @@ public class MainActivity extends Activity implements PeerListListener {
 
 			}
 		});
+
+		send = (Button) findViewById(R.id.send);
+		send.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				EditText text = (EditText) findViewById(R.id.sendTxt);
+				send(text.getText().toString());
+				
+			}
+		});
+
+	}
+	
+	public void send(String text){
+		// User has picked an image. Transfer it to group owner i.e peer
+		// using
+		// FileTransferService.
+
+		Log.d("MainActivity", "Intent----------- " + text);
+		Intent serviceIntent = new Intent(this,
+				TransferService.class);
+		serviceIntent.setAction(TransferService.ACTION_SEND_FILE);
+		serviceIntent.putExtra(TransferService.EXTRAS_SEND_TEXT,
+				text);
+		serviceIntent.putExtra(
+				TransferService.EXTRAS_GROUP_OWNER_ADDRESS,
+				info.groupOwnerAddress.getHostAddress());
+		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_PORT,
+				8988);
+		startService(serviceIntent);
+
 	}
 
 	/* register the broadcast receiver with the intent values to be matched */
@@ -119,5 +159,22 @@ public class MainActivity extends Activity implements PeerListListener {
 
 		findViewById(R.id.connect).setVisibility(View.VISIBLE);
 
+	}
+
+	@Override
+	public void onConnectionInfoAvailable(WifiP2pInfo arg0) {
+		// TODO Auto-generated method stub
+		info = arg0;
+		// After the group negotiation, we assign the group owner as the file
+		// server. The file server is single threaded, single connection server
+		// socket.
+		if (info.groupFormed && info.isGroupOwner) {
+			new FileServerAsync(this).execute();
+		} else if (info.groupFormed) {
+			// The other device acts as the client. In this case, we enable the
+			// get file button.
+			findViewById(R.id.send).setVisibility(View.VISIBLE);
+		}
+		findViewById(R.id.connect).setVisibility(View.GONE);
 	}
 }
