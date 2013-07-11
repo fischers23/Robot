@@ -4,11 +4,11 @@
     <item
         android:id="@+id/atn_connect"
         android:title="@string/connect"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom|withText" android:visible="false"/>
 
 
         <item
         android:id="@+id/atn_gyro"
         android:title="@string/gyro"
-        android:showAsAction="ifRoom|withText"/>
+        android:showAsAction="ifRoom|withText" android:visible="false"/>
 </menu>

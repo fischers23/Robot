@@ -8,9 +8,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
+		setHasOptionsMenu(true);
+		
 		cHandler = new ConnectionHandlerBluetooth(this, "Arduino");
 		driver = new Driver(cHandler);
 		mContext = getActivity();
@@ -117,6 +120,16 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onActivityCreated(savedInstanceState);
 	}
 
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		
+		menu.findItem(R.id.atn_connect).setVisible(true);
+		menu.findItem(R.id.atn_gyro).setVisible(true);
+	}
+	
+	
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		// TODO Auto-generated method stub
