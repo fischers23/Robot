@@ -34,6 +34,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	View mContentView;
 	Context mContext;
 
+	@SuppressWarnings("static-access")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -12,7 +12,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -92,11 +91,11 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 	}
 
 	void beginListenForData() {
-		final byte delimiter = 10; // This is the ASCII code for a newline
-									// character
-		readBufferPosition = 0;
-		readBuffer = new byte[1024];
-		
+//		final byte delimiter = 10; // This is the ASCII code for a newline
+//									// character
+//		readBufferPosition = 0;
+//		readBuffer = new byte[1024];
+//		
 //	    // Handler gets created on the UI-thread
 //	    Handler mHandler = mActivity.getWindow().getDecorView().getHandler();
 //	    

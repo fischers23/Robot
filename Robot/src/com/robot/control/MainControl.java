@@ -1,6 +1,5 @@
 package com.robot.control;
 
-import android.app.Activity;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
