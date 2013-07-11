@@ -1,4 +1,5 @@
-package com.robot.control;
+package com.robot.ui;
+import com.robot.R;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -11,12 +12,10 @@ import android.widget.Toast;
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 	BluetoothAdapter mBluetoothAdapter;
 	String deviceName;
-	MainControl mActivity;
-	
+	MainActivity mActivity;
 
-	public BluetoothBroadcastReceiver(MainControl activity) {
+	public BluetoothBroadcastReceiver(MainActivity activity) {
 		mActivity = activity;
-
 	}
 
 	@Override

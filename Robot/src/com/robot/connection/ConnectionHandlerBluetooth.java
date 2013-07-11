@@ -1,10 +1,12 @@
-package com.robot.control;
+package com.robot.connection;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
+
+import com.robot.ui.ControlUnits;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -74,7 +76,7 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 		mmOutputStream = mmSocket.getOutputStream();
 		mmInputStream = mmSocket.getInputStream();
 		Log.d("SendCommand", "Connected to device opened");
-		beginListenForData();
+//		beginListenForData();
 	}
 
 	public void closeConnection() throws IOException {
@@ -90,7 +92,7 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 			mmOutputStream.write(s.getBytes());
 	}
 
-	void beginListenForData() {
+//	void beginListenForData() {
 //		final byte delimiter = 10; // This is the ASCII code for a newline
 //									// character
 //		readBufferPosition = 0;
@@ -129,9 +131,9 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 //	            	
 //	            }
 //	        });
-	    
-
-	}
+//	    
+//
+//	}
 
 //	public int getDistance() {
 //		return distance;

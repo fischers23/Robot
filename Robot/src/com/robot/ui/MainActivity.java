@@ -1,4 +1,6 @@
-package com.robot.control;
+package com.robot.ui;
+
+import com.robot.R;
 
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -8,7 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainControl extends FragmentActivity {
+public class MainActivity extends FragmentActivity {
 
 	BluetoothBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
@@ -19,30 +21,31 @@ public class MainControl extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// register BlueTooth intent filter to get nofified as BT is connected or disconnected
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-
+		
+		
+		// open the welcome screen
 		setContentView(R.layout.welcomescreen);
-
-		
-		
 
 	}
 
-	
+	// Communication with the Arduino Car by bluetooth
+	// called from the layout directly
 	public void openController(View v) {
+		
+
+		
+		// open the controll screen
 		setContentView(R.layout.activity_main_control);
-		if(findViewById(R.id.mainFragment)!=null) {
-			
+		if (findViewById(R.id.mainFragment) != null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.mainFragment, cu).commit();
 		}
 
-
-		
 	}
-	
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -54,9 +57,11 @@ public class MainControl extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.atn_connect:
+			// connect/disconnect via bluetooth
 			cu.connectBT(btConnected);
 			return true;
 		case R.id.atn_gyro:
+			// enable the gyro steering
 			cu.enableGyro();
 			return true;
 		default:
@@ -66,6 +71,7 @@ public class MainControl extends FragmentActivity {
 
 	protected void onResume() {
 		super.onResume();
+		// create and register the bluetooth broadcast receiver
 		bcr = new BluetoothBroadcastReceiver(this);
 		registerReceiver(bcr, intentFilter);
 	}
@@ -79,6 +85,4 @@ public class MainControl extends FragmentActivity {
 		super.onDestroy();
 	}
 
-	
-	
 }

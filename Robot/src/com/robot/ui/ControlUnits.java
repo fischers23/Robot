@@ -1,4 +1,4 @@
-package com.robot.control;
+package com.robot.ui;
 
 import java.io.IOException;
 
@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.robot.R;
+import com.robot.connection.ConnectionHandlerBluetooth;
+import com.robot.connection.ConnectionHandlerInterface;
+
 public class ControlUnits extends Fragment implements SensorEventListener {
 
 	ConnectionHandlerInterface cHandler;
@@ -34,20 +38,24 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	View mContentView;
 	Context mContext;
 
-	@SuppressWarnings("static-access")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
+		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
-		
+
+		// create the bluetooth connection handler
 		cHandler = new ConnectionHandlerBluetooth(this, "Arduino");
+
+		// create the driver class
 		driver = new Driver(cHandler);
+
 		mContext = getActivity();
 		sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
 		sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
+		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
 
 		ImageView forward = (ImageView) mContentView.findViewById(R.id.forward);
@@ -109,9 +117,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			}
 		});
 
-		// Inflate the layout for this fragment
-		// return inflater.inflate(R.layout.fragment_control_unit,
-		// container,false);
 		return mContentView;
 
 	}
@@ -121,16 +126,15 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onActivityCreated(savedInstanceState);
 	}
 
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		
+		// make our menu buttons visible
 		menu.findItem(R.id.atn_connect).setVisible(true);
 		menu.findItem(R.id.atn_gyro).setVisible(true);
 	}
-	
-	
+
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		// TODO Auto-generated method stub

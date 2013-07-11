@@ -1,4 +1,4 @@
-package com.robot.control;
+package com.robot.connection;
 
 import java.io.IOException;
 
