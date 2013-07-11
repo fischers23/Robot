@@ -1,17 +1,16 @@
 package com.robot.control;
 
-
 import java.io.IOException;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,31 +29,23 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	SensorManager sensorManager = null;
 	Sensor sensor;
 	float mLastY;
-	
-	View mContentView; 
+
+	View mContentView;
 	Context mContext;
 
-
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContentView = inflater.inflate(R.layout.fragment_control_unit, null);
+		mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
-
-		
-		
 		cHandler = new ConnectionHandlerBluetooth(this, "Arduino");
 		driver = new Driver(cHandler);
-
-		mContext = container.getContext();
-		sensorManager = (SensorManager) mContext.getSystemService( Context.SENSOR_SERVICE);
+		mContext = getActivity();
+		sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
 		sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		// sensorManager.registerListener(this, sensor,
-		// sensorManager.SENSOR_DELAY_GAME);
+		sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
-		
-		
+
 		ImageView forward = (ImageView) mContentView.findViewById(R.id.forward);
 		forward.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -115,11 +106,16 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		});
 
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_control_unit, container, false);
+		// return inflater.inflate(R.layout.fragment_control_unit,
+		// container,false);
+		return mContentView;
 
 	}
 
-
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -139,7 +135,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			float value = 255 * (y / 10);
 			sensorLabel.setText(Float.toString(Math.round(value)));
 
-			// test
 			if (value < -80) { // left
 				isStraight = false;
 				driver.steerSpeed(Math.abs((int) value));
@@ -156,43 +151,8 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		}
 
 	}
-	
-	
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.atn_connect:
-//            	if(!btConnected) {
-            	if(true) {
-            		Thread connectionThread = new Thread(new Runnable() {
-					public void run() {
-						// open connection
-						try {
-							cHandler.establishConnection();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
-				connectionThread.start();
-            	} else { 
-            		try {
-    					cHandler.closeConnection();
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}   
-            	}
-                return true;
-            case R.id.atn_gyro:
-            	gyroEnabled = !gyroEnabled;
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    
-    
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		try {
@@ -205,14 +165,43 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		}
 	}
 
+	@Override
 	public void onResume() {
 		super.onResume();
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
+	@Override
 	public void onPause() {
 		super.onPause();
 		sensorManager.unregisterListener(this);
+	}
+
+	public void connectBT(boolean connected) {
+		if (!connected) {
+			Thread connectionThread = new Thread(new Runnable() {
+				public void run() {
+					// open connection
+					try {
+						cHandler.establishConnection();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			connectionThread.start();
+		} else {
+			try {
+				cHandler.closeConnection();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void enableGyro() {
+		gyroEnabled = !gyroEnabled;
 	}
 
 }
