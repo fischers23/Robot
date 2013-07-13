@@ -10,9 +10,11 @@
         android:textStyle="bold"
         android:text="Discoverd Peers"/>
     
-    <ListView android:id="@+id/peers"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        
-    </ListView>
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawSelectorOnTop="false" />
+    
 </LinearLayout>
