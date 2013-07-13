@@ -12,11 +12,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.IntentFilter;
+
 
 import com.robot.R;
 import com.robot.connection.ConnectionHandlerBluetooth;
@@ -28,8 +31,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 	ConnectionHandlerInterface cHandler;
 	Driver driver;
-	Thread distanceThread;
-	public TextView distanceLabel;
+
 
 	boolean gyroEnabled = false;
 	TextView sensorLabel;
@@ -39,12 +41,21 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 	View mContentView;
 	Context mContext;
+	
+	GlobalBroadcastReceiver bcr = null;
+	private final IntentFilter intentFilter = new IntentFilter();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
+		// register BlueTooth intent filter to get nofified as BT is connected
+		// or disconnected
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+		
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
 
@@ -122,7 +133,24 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		return mContentView;
 
 	}
-
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.atn_connect:
+			// connect/disconnect via bluetooth
+			connectBT();
+			return true;
+		case R.id.atn_gyro:
+			// enable the gyro steering
+			enableGyro();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -189,12 +217,17 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	public void onResume() {
 		super.onResume();
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+		bcr = new GlobalBroadcastReceiver(this);
+		mContext.registerReceiver(bcr, intentFilter);
 	}
 
+	
+	
 	@Override
 	public void onPause() {
 		super.onPause();
 		sensorManager.unregisterListener(this);
+		mContext.unregisterReceiver(bcr);
 	}
 
 	public void connectBT() {
@@ -202,7 +235,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
 					// open connection
-					try {
+					try { 
 						cHandler.establishConnection();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
