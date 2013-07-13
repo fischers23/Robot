@@ -1,14 +1,13 @@
 package com.robot.ui;
 
-import com.robot.R;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+
+import com.robot.R;
 
 public class MainActivity extends FragmentActivity {
 
@@ -33,23 +32,20 @@ public class MainActivity extends FragmentActivity {
 		return true;
 	}
 
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
 	// Communication with the Arduino Car by bluetooth
 	// called from the layout directly
 	public void openController(View v) {
 
 		// open the controll screen
 		if (findViewById(R.id.mainFragment) != null) {
-
-			
-			
 			ControlUnits cu = new ControlUnits();
 			getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
 		}
 
-	}
-
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 }
