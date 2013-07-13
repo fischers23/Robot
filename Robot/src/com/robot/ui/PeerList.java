@@ -36,11 +36,7 @@ public class PeerList extends ListFragment implements PeerListListener{
 		
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_wifi_list, container, false);
-		
-		
-		
-		
-		
+
 		return mContentView;
 	}
 
