@@ -12,7 +12,7 @@ import android.view.View;
 
 public class MainActivity extends FragmentActivity {
 
-	BluetoothBroadcastReceiver bcr = null;
+	ConnectionBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
 	public boolean btConnected = false;
 	ControlUnits cu = new ControlUnits();
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		// create and register the bluetooth broadcast receiver
-		bcr = new BluetoothBroadcastReceiver(this);
+		bcr = new ConnectionBroadcastReceiver(this);
 		registerReceiver(bcr, intentFilter);
 	}
 
