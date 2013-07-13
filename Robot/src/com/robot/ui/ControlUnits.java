@@ -24,6 +24,8 @@ import com.robot.connection.ConnectionHandlerInterface;
 
 public class ControlUnits extends Fragment implements SensorEventListener {
 
+	public boolean btConnected = false;
+
 	ConnectionHandlerInterface cHandler;
 	Driver driver;
 	Thread distanceThread;
@@ -195,8 +197,8 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		sensorManager.unregisterListener(this);
 	}
 
-	public void connectBT(boolean connected) {
-		if (!connected) {
+	public void connectBT() {
+		if (!btConnected) {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
 					// open connection
