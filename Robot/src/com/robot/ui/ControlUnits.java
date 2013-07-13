@@ -31,8 +31,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 	ConnectionHandlerInterface cHandler;
 	Driver driver;
-	Thread distanceThread;
-	public TextView distanceLabel;
+
 
 	boolean gyroEnabled = false;
 	TextView sensorLabel;
@@ -43,7 +42,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	View mContentView;
 	Context mContext;
 	
-	BroadcastReceiverBT bcr = null;
+	GlobalBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
 
 	@Override
@@ -218,7 +217,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	public void onResume() {
 		super.onResume();
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-		bcr = new BroadcastReceiverBT(this);
+		bcr = new GlobalBroadcastReceiver(this);
 		mContext.registerReceiver(bcr, intentFilter);
 	}
 
@@ -236,7 +235,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
 					// open connection
-					try {
+					try { 
 						cHandler.establishConnection();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

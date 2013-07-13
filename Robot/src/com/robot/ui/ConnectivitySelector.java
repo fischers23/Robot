@@ -29,7 +29,7 @@ public class ConnectivitySelector extends Fragment {
 	
 	
 
-	
+
 	
 	
 }
