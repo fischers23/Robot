@@ -7,7 +7,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.robot.R;
 
-public class PeerList extends ListFragment implements PeerListListener{
+public class PeerList extends Fragment implements PeerListListener{
 
 	private View mContentView;
 	private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
@@ -41,6 +41,9 @@ public class PeerList extends ListFragment implements PeerListListener{
             Log.d("PeerList", "No devices found");
             return;
         }
-		
+
+//        ListView lv = (ListView) mContentView.findViewById(R.id.peers);
+        
+        
 	}
 }

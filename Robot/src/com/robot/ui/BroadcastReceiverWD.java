@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.view.View;
 import android.widget.Toast;
 
@@ -38,11 +39,12 @@ public class BroadcastReceiverWD extends BroadcastReceiver {
 				// Wi-Fi Direct is not enabled
 			}
 		} 
-//		else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-//			if (mManager != null) {
-//				mManager.requestPeers(mChannel, mActivity);
-//			}
-//		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+		else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+			if (mManager != null) {
+				mActivity.setContentView(R.layout.activity_detect_peers);
+				mManager.requestPeers(mChannel, (PeerListListener) mActivity.getFragmentManager().findFragmentById(R.id.peerList));
+			}
+		} //else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 //			// Respond to new connection or disconnections
 //			if (mManager == null) {
 //				return;
