@@ -12,9 +12,8 @@ import android.view.View;
 
 public class MainActivity extends FragmentActivity {
 
-	ConnectionBroadcastReceiver bcr = null;
+	BroadcastReceiverBT bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
-	public boolean btConnected = false;
 	ControlUnits cu = new ControlUnits();
 
 	@Override
@@ -58,7 +57,7 @@ public class MainActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.atn_connect:
 			// connect/disconnect via bluetooth
-			cu.connectBT(btConnected);
+			cu.connectBT();
 			return true;
 		case R.id.atn_gyro:
 			// enable the gyro steering
@@ -72,7 +71,7 @@ public class MainActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		// create and register the bluetooth broadcast receiver
-		bcr = new ConnectionBroadcastReceiver(this);
+		bcr = new BroadcastReceiverBT(cu);
 		registerReceiver(bcr, intentFilter);
 	}
 
