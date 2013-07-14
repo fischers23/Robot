@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
+import com.robot.ui.ConnectivitySelector;
 import com.robot.ui.ControlUnits;
 
 import android.app.AlertDialog;
@@ -26,10 +27,10 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 	InputStream mmInputStream;
 	byte[] readBuffer;
 	String deviceName;
-	ControlUnits mActivity;
+	ConnectivitySelector mActivity;
 	int readBufferPosition;
 
-	public CHBluetooth(ControlUnits activity, String deviceName) {
+	public CHBluetooth(ConnectivitySelector activity, String deviceName) {
 		mActivity = activity;
 		this.deviceName = deviceName;
 		enableBluetooth();

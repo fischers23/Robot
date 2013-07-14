@@ -27,10 +27,8 @@ import com.robot.connection.ArduinoCommands;
 
 public class ControlUnits extends Fragment implements SensorEventListener {
 
-	public boolean btConnected = false;
 
-	ConnectionHandlerInterface cHandler;
-	ArduinoCommands driver;
+	public ArduinoCommands driver;
 
 	boolean gyroEnabled = false;
 	TextView sensorLabel;
@@ -39,33 +37,17 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	float mLastY;
 
 	View mContentView;
-	Context mContext;
-
-	GlobalBroadcastReceiver bcr = null;
-	private final IntentFilter intentFilter = new IntentFilter();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
-		// register BlueTooth intent filter to get nofified as BT is connected
-		// or disconnected
-		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
-		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
-		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
 
-		// create the bluetooth connection handler
-		cHandler = new CHBluetooth(this, "Arduino");
-
-		// create the driver class
-		driver = new ArduinoCommands(cHandler);
-
-		mContext = getActivity();
-		sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+		// gyro stuff
+		sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 		sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
@@ -134,22 +116,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.atn_connect:
-			// connect/disconnect via bluetooth
-			connectBT();
-			return true;
-		case R.id.atn_gyro:
-			// enable the gyro steering
-			enableGyro();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 	}
@@ -201,14 +167,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		try {
-			if (cHandler != null) {
-				// close connection on exit
-				cHandler.closeConnection();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -216,10 +174,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onResume();
 		// register the gyro sensor
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-		// create the broadcast receiver
-		bcr = new GlobalBroadcastReceiver(this);
-		// register intent filters
-		mContext.registerReceiver(bcr, intentFilter);
 	}
 
 	@Override
@@ -227,31 +181,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onPause();
 		// unregister gyro steering sensors
 		sensorManager.unregisterListener(this);
-		// unregister the intent filters together with the broadcastreceiver
-		mContext.unregisterReceiver(bcr);
-	}
-
-	public void connectBT() {
-		if (!btConnected) {
-			Thread connectionThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						// open connection in a thread to avoid ui freezes
-						cHandler.establishConnection();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			connectionThread.start();
-		} else {
-			try {
-				// if we are already connected -> disconnect
-				cHandler.closeConnection();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	// This class toggles the gyro sensor

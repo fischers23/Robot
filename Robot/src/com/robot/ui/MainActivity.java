@@ -1,5 +1,7 @@
 package com.robot.ui;
 
+import android.content.IntentFilter;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +13,10 @@ import com.robot.R;
 
 public class MainActivity extends FragmentActivity {
 
+	GlobalBroadcastReceiver bcr = null;
+	private final IntentFilter intentFilter = new IntentFilter();
+
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,12 +48,32 @@ public class MainActivity extends FragmentActivity {
 	// called from the layout directly
 	public void openController(View v) {
 
-		// open the controll screen fragment
-		if (findViewById(R.id.mainFragment) != null) {
-			ControlUnits cu = new ControlUnits();
-			getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
-		}
+		// register BlueTooth intent filter to get nofified as BT is connected
+		// or disconnected
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+		
+
 
 	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		// unregister the intent filters together with the broadcastreceiver
+		unregisterReceiver(bcr);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		// create the broadcast receiver
+		bcr = new GlobalBroadcastReceiver(this);
+		// register intent filters
+		registerReceiver(bcr, intentFilter);
+	}
+	
+	
 
 }

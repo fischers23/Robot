@@ -2,6 +2,7 @@ package com.robot.ui;
 
 import com.robot.R;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -16,11 +17,11 @@ import android.widget.Toast;
 public class GlobalBroadcastReceiver extends BroadcastReceiver {
 	BluetoothAdapter mBluetoothAdapter;
 	String deviceName;
-	ControlUnits mActivity;
+	Activity mActivity;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
 
-	public GlobalBroadcastReceiver(ControlUnits activity) {
+	public GlobalBroadcastReceiver(Activity activity) {
 		mActivity = activity;
 	}
 
@@ -31,14 +32,14 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 		// Bluetooth broadcast receiver
 		if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
 			buttonsAvailable(View.VISIBLE);
-			mActivity.btConnected = true;
+			btConnected = true;
 			Toast.makeText(context, "Device is now connected", Toast.LENGTH_LONG).show();
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
 			buttonsAvailable(View.INVISIBLE);
-			mActivity.btConnected = false;
+			btConnected = false;
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
 			buttonsAvailable(View.INVISIBLE);
-			mActivity.btConnected = false;
+			btConnected = false;
 		}
 
 		// Wifi-Direct broadcast receiver
@@ -88,10 +89,10 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 	// we are connected/disconnected
 	private void buttonsAvailable(int i) {
 		if (i == View.VISIBLE || i == View.INVISIBLE) {
-			mActivity.getActivity().findViewById(R.id.forward).setVisibility(i);
-			mActivity.getActivity().findViewById(R.id.back).setVisibility(i);
-			mActivity.getActivity().findViewById(R.id.left).setVisibility(i);
-			mActivity.getActivity().findViewById(R.id.right).setVisibility(i);
+			mActivity.findViewById(R.id.forward).setVisibility(i);
+			mActivity.findViewById(R.id.back).setVisibility(i);
+			mActivity.findViewById(R.id.left).setVisibility(i);
+			mActivity.findViewById(R.id.right).setVisibility(i);
 		}
 	}
 
