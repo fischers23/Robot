@@ -27,7 +27,6 @@ public class ConnectivitySelector extends Fragment {
 
 	// the controller ui
 	ControlUnits cu;
-			
 
 	View mContentView;
 	Context mContext;
@@ -38,37 +37,37 @@ public class ConnectivitySelector extends Fragment {
 		mContentView = inflater.inflate(R.layout.fragment_connectivity_selector, container, false);
 		mContext = getActivity();
 
-		// LinearLayout mLinearLayout = (LinearLayout)
-		// inflater.inflate(R.layout.lessons1, container, false);
-
-		// note that we're looking for a button with id="@+id/myButton" in your
-		// inflated layout
-		// Naturally, this can be any View; it doesn't have to be a button
-		Button mButton = (Button) mContentView.findViewById(R.id.connect_bluetooth);
-		mButton.setOnClickListener(new OnClickListener() {
+		// This section handles the Bluetooth Button
+		Button connectBTButton = (Button) mContentView.findViewById(R.id.connect_bluetooth);
+		connectBTButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				
-				// open the controll screen fragment
-				//if (mContentView.findViewById(R.id.mainFragment) != null) {
-					Log.d("ffffffffffffffffffffffffff","uuuuuuuuuuuuuuuuuuuuuuuu");
-					cu = new ControlUnits();
-					getFragmentManager().beginTransaction().replace(R.id.mainFragment, (Fragment)cu).addToBackStack("cu").commit();
-				//}
-				
+				// open the control screen fragment
+				cu = new ControlUnits();
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, (Fragment) cu).addToBackStack("cu").commit();
 			}
 		});
 
+		// This section handles the Wifi Button
+		Button connectWifiButton = (Button) mContentView.findViewById(R.id.connect_wifidirect);
+		connectWifiButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// open the control screen fragment
+			}
+		});
+		
+		
 		return mContentView;
 	}
 
-	
 	// proxy for the gyro sensor toggle
-	public void enableGyro(){
+	public void enableGyro() {
 		cu.enableGyro();
 	}
-	
+
+	// here we handle the bluetoot connection
+	// this is called by the menu in the fragment_control_unit
 	public void connectBT(boolean BTconnected) {
 		// if not already done instantiate the BT connection handler
 		if (cHandler == null)
@@ -77,8 +76,8 @@ public class ConnectivitySelector extends Fragment {
 		// create the driver class
 		driver = new ArduinoCommands(cHandler);
 		cu.setCommands(driver);
-		
-		Log.d("THISSSS",""+BTconnected);
+
+		// toggle connect
 		if (!BTconnected) {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
