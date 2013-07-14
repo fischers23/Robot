@@ -1,18 +1,18 @@
 package com.robot.ui;
 
-import com.robot.R;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.robot.R;
 
 public class GlobalBroadcastReceiver extends BroadcastReceiver {
 	BluetoothAdapter mBluetoothAdapter;
@@ -20,6 +20,7 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 	Activity mActivity;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
+	boolean btConnected = false;
 
 	public GlobalBroadcastReceiver(Activity activity) {
 		mActivity = activity;
@@ -33,6 +34,7 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 		if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
 			buttonsAvailable(View.VISIBLE);
 			btConnected = true;
+			Log.d("bcr","connected");
 			Toast.makeText(context, "Device is now connected", Toast.LENGTH_LONG).show();
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
 			buttonsAvailable(View.INVISIBLE);
@@ -83,6 +85,10 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 		// // Respond to this device's wifi state changing
 		// }
 
+	}
+	
+	public boolean isBTconnected() {
+		return btConnected;
 	}
 
 	// the broadcast receiver toggles the visibility of the steering buttons as

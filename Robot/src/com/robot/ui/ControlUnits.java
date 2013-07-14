@@ -28,7 +28,7 @@ import com.robot.connection.ArduinoCommands;
 public class ControlUnits extends Fragment implements SensorEventListener {
 
 
-	public ArduinoCommands driver;
+	ArduinoCommands driver = null;
 
 	boolean gyroEnabled = false;
 	TextView sensorLabel;
@@ -134,6 +134,12 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		// TODO Auto-generated method stub
 	}
 
+	
+	public void setCommands(ArduinoCommands ac) {
+		driver = ac;
+	}
+	
+	
 	// this part handles the steering via the phones internal gyro sensors
 	@Override
 	public void onSensorChanged(SensorEvent event) {

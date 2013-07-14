@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ public class ConnectivitySelector extends Fragment {
 	// the controller ui
 	ControlUnits cu;
 			
-	public boolean btConnected = false;
 
 	View mContentView;
 	Context mContext;
@@ -46,17 +44,18 @@ public class ConnectivitySelector extends Fragment {
 		// note that we're looking for a button with id="@+id/myButton" in your
 		// inflated layout
 		// Naturally, this can be any View; it doesn't have to be a button
-		Button mButton = (Button) mContentView.findViewById(R.id.button1);
+		Button mButton = (Button) mContentView.findViewById(R.id.connect_bluetooth);
 		mButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d("ffffffffffffffffffffffffff","uuuuuuuuuuuuuuuuuuuuuuuu");
+				
 				
 				// open the controll screen fragment
-				if (mContentView.findViewById(R.id.mainFragment) != null) {
+				//if (mContentView.findViewById(R.id.mainFragment) != null) {
+					Log.d("ffffffffffffffffffffffffff","uuuuuuuuuuuuuuuuuuuuuuuu");
 					cu = new ControlUnits();
-					getChildFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
-				}
+					getFragmentManager().beginTransaction().replace(R.id.mainFragment, (Fragment)cu).addToBackStack("cu").commit();
+				//}
 				
 			}
 		});
@@ -64,37 +63,26 @@ public class ConnectivitySelector extends Fragment {
 		return mContentView;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.atn_connect:
-			// connect/disconnect via bluetooth
-			connectBT();
-			return true;
-		case R.id.atn_gyro:
-			// enable the gyro steering
-			//TODO: set this value somewhere
-//			enableGyro();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+	
+	// proxy for the gyro sensor toggle
+	public void enableGyro(){
+		cu.enableGyro();
 	}
-
-	public void connectBT() {
+	
+	public void connectBT(boolean BTconnected) {
 		// if not already done instantiate the BT connection handler
 		if (cHandler == null)
 			cHandler = new CHBluetooth(this, "Arduino");
 
 		// create the driver class
 		driver = new ArduinoCommands(cHandler);
-		cu.driver = driver;
+		cu.setCommands(driver);
 		
-		if (!btConnected) {
+		Log.d("THISSSS",""+BTconnected);
+		if (!BTconnected) {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
 					try {
-
 						// open connection in a thread to avoid ui freezes
 						cHandler.establishConnection();
 
