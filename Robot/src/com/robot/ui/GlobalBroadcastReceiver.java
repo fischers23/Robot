@@ -29,13 +29,13 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
-		
+
 		// Bluetooth broadcast receiver
 		if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
 			buttonsAvailable(View.VISIBLE);
 			btConnected = true;
-			Log.d("bcr","connected");
-			Toast.makeText(context, "Device is now connected", Toast.LENGTH_LONG).show();
+			// Toast.makeText(context, "Device is now connected",
+			// Toast.LENGTH_LONG).show();
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
 			buttonsAvailable(View.INVISIBLE);
 			btConnected = false;
@@ -86,7 +86,7 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 		// }
 
 	}
-	
+
 	public boolean isBTconnected() {
 		return btConnected;
 	}

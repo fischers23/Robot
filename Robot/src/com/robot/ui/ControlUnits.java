@@ -15,30 +15,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
 
 public class ControlUnits extends Fragment implements SensorEventListener {
 
-
+	// the arduino command set
 	ArduinoCommands driver = null;
 
+	// gyro sensor and label
 	boolean gyroEnabled = false;
 	TextView sensorLabel;
 	SensorManager sensorManager = null;
 	Sensor sensor;
 	float mLastY;
 
-	View mContentView;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
+		View mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
+		Toast.makeText(getActivity(), "Press connect to start!", Toast.LENGTH_LONG).show();
 
 		// gyro stuff
 		sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -46,6 +48,9 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
 
+		
+		// list of buttons to steer
+		// steer forward
 		ImageView forward = (ImageView) mContentView.findViewById(R.id.forward);
 		forward.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -59,7 +64,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 				return true;
 			}
 		});
-
+		// steer bachward
 		ImageView back = (ImageView) mContentView.findViewById(R.id.back);
 		back.setOnTouchListener(new View.OnTouchListener() {
 
@@ -74,7 +79,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 				return true;
 			}
 		});
-
+		// steer left
 		ImageView left = (ImageView) mContentView.findViewById(R.id.left);
 		left.setOnTouchListener(new View.OnTouchListener() {
 
@@ -89,7 +94,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 				return true;
 			}
 		});
-
+		// steer right
 		ImageView right = (ImageView) mContentView.findViewById(R.id.right);
 		right.setOnTouchListener(new View.OnTouchListener() {
 

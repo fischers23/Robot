@@ -3,6 +3,7 @@ package com.robot.ui;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,9 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// create the broadcast receiver
+		bcr = new GlobalBroadcastReceiver(this);
+		
 		// open the welcome screen
 		setContentView(R.layout.main_activity);
 
@@ -48,6 +52,7 @@ public class MainActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.atn_connect:
 			// connect/disconnect via bluetooth
+			// Log.d("main", ""+bcr.isBTconnected());
 			consel.connectBT(bcr.isBTconnected());
 			return true;
 		case R.id.atn_gyro:
@@ -70,8 +75,6 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		// create the broadcast receiver
-		bcr = new GlobalBroadcastReceiver(this);
 		// register intent filters
 		registerReceiver(bcr, intentFilter);
 	}
