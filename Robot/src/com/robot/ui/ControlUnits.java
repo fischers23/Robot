@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.IntentFilter;
 
-
 import com.robot.R;
 import com.robot.connection.CHBluetooth;
 import com.robot.connection.ConnectionHandlerInterface;
@@ -33,7 +32,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	ConnectionHandlerInterface cHandler;
 	ArduinoCommands driver;
 
-
 	boolean gyroEnabled = false;
 	TextView sensorLabel;
 	SensorManager sensorManager = null;
@@ -42,7 +40,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 	View mContentView;
 	Context mContext;
-	
+
 	GlobalBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
 
@@ -56,7 +54,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-		
+
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
 
@@ -134,7 +132,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		return mContentView;
 
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -150,8 +148,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -160,7 +157,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		
+
 		// make our menu buttons visible
 		menu.findItem(R.id.atn_connect).setVisible(true);
 		menu.findItem(R.id.atn_gyro).setVisible(true);
@@ -169,9 +166,9 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		// TODO Auto-generated method stub
-
 	}
 
+	// this part handles the steering via the phones internal gyro sensors
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		boolean isStraight = true;
@@ -206,10 +203,10 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onDestroy();
 		try {
 			if (cHandler != null) {
+				// close connection on exit
 				cHandler.closeConnection();
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -217,17 +214,20 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		// register the gyro sensor
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+		// create the broadcast receiver
 		bcr = new GlobalBroadcastReceiver(this);
+		// register intent filters
 		mContext.registerReceiver(bcr, intentFilter);
 	}
 
-	
-	
 	@Override
 	public void onPause() {
 		super.onPause();
+		// unregister gyro steering sensors
 		sensorManager.unregisterListener(this);
+		// unregister the intent filters together with the broadcastreceiver
 		mContext.unregisterReceiver(bcr);
 	}
 
@@ -235,11 +235,10 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		if (!btConnected) {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
-					// open connection
-					try { 
+					try {
+						// open connection in a thread to avoid ui freezes
 						cHandler.establishConnection();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -247,6 +246,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			connectionThread.start();
 		} else {
 			try {
+				// if we are already connected -> disconnect
 				cHandler.closeConnection();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -254,6 +254,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		}
 	}
 
+	// This class toggles the gyro sensor
 	public void enableGyro() {
 		gyroEnabled = !gyroEnabled;
 	}
