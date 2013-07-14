@@ -22,7 +22,7 @@ import android.content.IntentFilter;
 
 
 import com.robot.R;
-import com.robot.connection.ConnectionHandlerBluetooth;
+import com.robot.connection.CHBluetooth;
 import com.robot.connection.ConnectionHandlerInterface;
 
 public class ControlUnits extends Fragment implements SensorEventListener {
@@ -60,7 +60,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		setHasOptionsMenu(true);
 
 		// create the bluetooth connection handler
-		cHandler = new ConnectionHandlerBluetooth(this, "Arduino");
+		cHandler = new CHBluetooth(this, "Arduino");
 
 		// create the driver class
 		driver = new Driver(cHandler);

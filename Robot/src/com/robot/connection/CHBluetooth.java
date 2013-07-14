@@ -17,7 +17,7 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
 
-public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
+public class CHBluetooth implements ConnectionHandlerInterface {
 
 	BluetoothAdapter mBluetoothAdapter;
 	BluetoothSocket mmSocket;
@@ -29,7 +29,7 @@ public class ConnectionHandlerBluetooth implements ConnectionHandlerInterface {
 	ControlUnits mActivity;
 	int readBufferPosition;
 
-	public ConnectionHandlerBluetooth(ControlUnits activity, String deviceName) {
+	public CHBluetooth(ControlUnits activity, String deviceName) {
 		mActivity = activity;
 		this.deviceName = deviceName;
 		enableBluetooth();
