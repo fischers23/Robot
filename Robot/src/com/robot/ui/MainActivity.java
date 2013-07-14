@@ -18,6 +18,7 @@ public class MainActivity extends FragmentActivity {
 		// open the welcome screen
 		setContentView(R.layout.main_activity);
 
+		// fill the welcome screen with the connectivity selection fragment
 		if (savedInstanceState == null) {
 			Fragment consel = new ConnectivitySelector();
 			getSupportFragmentManager().beginTransaction().add(R.id.mainFragment, consel).commit();
@@ -25,6 +26,7 @@ public class MainActivity extends FragmentActivity {
 
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -40,7 +42,7 @@ public class MainActivity extends FragmentActivity {
 	// called from the layout directly
 	public void openController(View v) {
 
-		// open the controll screen
+		// open the controll screen fragment
 		if (findViewById(R.id.mainFragment) != null) {
 			ControlUnits cu = new ControlUnits();
 			getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
