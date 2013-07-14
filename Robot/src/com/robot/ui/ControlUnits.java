@@ -1,7 +1,5 @@
 package com.robot.ui;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,17 +10,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.IntentFilter;
 
 import com.robot.R;
-import com.robot.connection.CHBluetooth;
-import com.robot.connection.ConnectionHandlerInterface;
 import com.robot.connection.ArduinoCommands;
 
 public class ControlUnits extends Fragment implements SensorEventListener {

@@ -6,9 +6,6 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
-import com.robot.ui.ConnectivitySelector;
-import com.robot.ui.ControlUnits;
-
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,6 +14,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
+
+import com.robot.ui.ConnectivitySelector;
 
 public class CHBluetooth implements ConnectionHandlerInterface {
 

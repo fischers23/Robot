@@ -20,7 +20,7 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 	Activity mActivity;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
-	boolean btConnected = false;
+	private boolean btConnected = false;
 
 	public GlobalBroadcastReceiver(Activity activity) {
 		mActivity = activity;
