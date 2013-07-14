@@ -37,21 +37,29 @@ public class ConnectivitySelector extends Fragment {
 		mContext = getActivity();
 
 		// make sure there is no pending connection
-		if(cHandler!=null)
+		if (cHandler != null)
 			try {
 				cHandler.closeConnection();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		
-		
+
 		// This section handles the Bluetooth Button
 		Button connectBTButton = (Button) mContentView.findViewById(R.id.connect_bluetooth);
 		connectBTButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// open the control screen fragment
+
+				// if not already done instantiate the BT connection handler
+				if (cHandler == null)
+					cHandler = new CHBluetooth(getActivity(), "Arduino");
+
+				// create the driver class
 				cu = new ControlUnits();
+				driver = new ArduinoCommands(cHandler);
+				cu.setCommands(driver);
+
+				// open the control screen fragment
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, (Fragment) cu).addToBackStack("cu").commit();
 			}
 		});
@@ -64,8 +72,7 @@ public class ConnectivitySelector extends Fragment {
 				// open the control screen fragment
 			}
 		});
-		
-		
+
 		return mContentView;
 	}
 
@@ -77,13 +84,6 @@ public class ConnectivitySelector extends Fragment {
 	// here we handle the bluetoot connection
 	// this is called by the menu in the fragment_control_unit
 	public void connectBT(boolean BTconnected) {
-		// if not already done instantiate the BT connection handler
-		if (cHandler == null)
-			cHandler = new CHBluetooth(this, "Arduino");
-
-		// create the driver class
-		driver = new ArduinoCommands(cHandler);
-		cu.setCommands(driver);
 
 		// toggle connect
 		if (!BTconnected) {
@@ -92,17 +92,18 @@ public class ConnectivitySelector extends Fragment {
 					try {
 						// open connection in a thread to avoid ui freezes
 						cHandler.establishConnection();
-
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			});
 			connectionThread.start();
+			cu.buttonsAvailable(View.VISIBLE);
 		} else {
 			try {
 				// if we are already connected -> disconnect
 				cHandler.closeConnection();
+				cu.buttonsAvailable(View.INVISIBLE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

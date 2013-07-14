@@ -1,6 +1,7 @@
 package com.robot.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -8,9 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.robot.R;
 
@@ -32,15 +31,15 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 
 		// Bluetooth broadcast receiver
 		if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-			buttonsAvailable(View.VISIBLE);
+//			buttonsAvailable(View.VISIBLE);
 			btConnected = true;
 			// Toast.makeText(context, "Device is now connected",
 			// Toast.LENGTH_LONG).show();
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
-			buttonsAvailable(View.INVISIBLE);
+//			buttonsAvailable(View.INVISIBLE);
 			btConnected = false;
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-			buttonsAvailable(View.INVISIBLE);
+//			buttonsAvailable(View.INVISIBLE);
 			btConnected = false;
 		}
 
@@ -91,15 +90,6 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 		return btConnected;
 	}
 
-	// the broadcast receiver toggles the visibility of the steering buttons as
-	// we are connected/disconnected
-	private void buttonsAvailable(int i) {
-		if (i == View.VISIBLE || i == View.INVISIBLE) {
-			mActivity.findViewById(R.id.forward).setVisibility(i);
-			mActivity.findViewById(R.id.back).setVisibility(i);
-			mActivity.findViewById(R.id.left).setVisibility(i);
-			mActivity.findViewById(R.id.right).setVisibility(i);
-		}
-	}
+
 
 }

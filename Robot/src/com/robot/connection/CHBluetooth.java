@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -26,10 +27,10 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 	InputStream mmInputStream;
 	byte[] readBuffer;
 	String deviceName;
-	ConnectivitySelector mActivity;
+	Activity mActivity;
 	int readBufferPosition;
 
-	public CHBluetooth(ConnectivitySelector activity, String deviceName) {
+	public CHBluetooth(Activity activity, String deviceName) {
 		mActivity = activity;
 		this.deviceName = deviceName;
 		enableBluetooth();
@@ -140,7 +141,7 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 //	}
 
 	public void showSettingsAlert() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity.getActivity());
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
 		alertDialog.setTitle("BT settings");
 		alertDialog.setMessage("BT is not enabled. Do you want to go to settings menu?");
 

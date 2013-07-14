@@ -1,6 +1,9 @@
 package com.robot.ui;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,7 +35,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	Sensor sensor;
 	float mLastY;
 
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,7 +50,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
 
-		
 		// list of buttons to steer
 		// steer forward
 		ImageView forward = (ImageView) mContentView.findViewById(R.id.forward);
@@ -133,12 +134,10 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		// TODO Auto-generated method stub
 	}
 
-	
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
-	
-	
+
 	// this part handles the steering via the phones internal gyro sensors
 	@Override
 	public void onSensorChanged(SensorEvent event) {
@@ -191,6 +190,22 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	// This class toggles the gyro sensor
 	public void enableGyro() {
 		gyroEnabled = !gyroEnabled;
+		if (!gyroEnabled)
+			sensorLabel.setText("off");
+		else
+			sensorLabel.setText("on");
+	}
+
+
+	// toggle the visibility of the steering buttons as
+	// we are connected/disconnected
+	public void buttonsAvailable(int i) {
+		if (i == View.VISIBLE || i == View.INVISIBLE) {
+			getActivity().findViewById(R.id.forward).setVisibility(i);
+			getActivity().findViewById(R.id.back).setVisibility(i);
+			getActivity().findViewById(R.id.left).setVisibility(i);
+			getActivity().findViewById(R.id.right).setVisibility(i);
+		}
 	}
 
 }
