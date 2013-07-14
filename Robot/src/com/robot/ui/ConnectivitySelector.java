@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
@@ -45,7 +46,7 @@ public class ConnectivitySelector extends Fragment {
 			}
 
 		// This section handles the Bluetooth Button
-		Button connectBTButton = (Button) mContentView.findViewById(R.id.connect_bluetooth);
+		ImageButton connectBTButton = (ImageButton) mContentView.findViewById(R.id.connect_bluetooth);
 		connectBTButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -65,7 +66,7 @@ public class ConnectivitySelector extends Fragment {
 		});
 
 		// This section handles the Wifi Button
-		Button connectWifiButton = (Button) mContentView.findViewById(R.id.connect_wifidirect);
+		ImageButton connectWifiButton = (ImageButton) mContentView.findViewById(R.id.connect_wifidirect);
 		connectWifiButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
