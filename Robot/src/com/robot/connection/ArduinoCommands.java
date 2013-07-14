@@ -1,13 +1,12 @@
-package com.robot.ui;
+package com.robot.connection;
 
-import com.robot.connection.ConnectionHandlerInterface;
 
-public class Driver {
+public class ArduinoCommands {
 
 	ConnectionHandlerInterface sc;
 	String[] send = new String[] { "000", "000", "0", "0", "0", "0" };
 
-	public Driver(ConnectionHandlerInterface cHandler) {
+	public ArduinoCommands(ConnectionHandlerInterface cHandler) {
 		this.sc = cHandler;
 	}
 

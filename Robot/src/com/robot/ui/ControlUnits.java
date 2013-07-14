@@ -24,13 +24,14 @@ import android.content.IntentFilter;
 import com.robot.R;
 import com.robot.connection.CHBluetooth;
 import com.robot.connection.ConnectionHandlerInterface;
+import com.robot.connection.ArduinoCommands;
 
 public class ControlUnits extends Fragment implements SensorEventListener {
 
 	public boolean btConnected = false;
 
 	ConnectionHandlerInterface cHandler;
-	Driver driver;
+	ArduinoCommands driver;
 
 
 	boolean gyroEnabled = false;
@@ -63,7 +64,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		cHandler = new CHBluetooth(this, "Arduino");
 
 		// create the driver class
-		driver = new Driver(cHandler);
+		driver = new ArduinoCommands(cHandler);
 
 		mContext = getActivity();
 		sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
