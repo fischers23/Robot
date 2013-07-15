@@ -48,12 +48,12 @@ public class PeerList extends ListFragment implements PeerListListener{
 				new WifiP2pManager.ActionListener() {
 					@Override
 					public void onSuccess() {
-						Log.d("Main", "Peer discovery successful");
+						Log.d("PeerList", "Peer discovery successful");
 					}
 
 					@Override
 					public void onFailure(int reasonCode) {
-						Log.d("Main", "Peer discovery failed");
+						Log.d("PeerList", "Peer discovery failed");
 					}
 				});
 		
@@ -128,6 +128,22 @@ public class PeerList extends ListFragment implements PeerListListener{
         pd.setDevice(device);
         getFragmentManager().beginTransaction().replace(R.id.mainFragment, pd).addToBackStack("pd").commit();
         
+    }
+    
+    
+    public void discoverPeers(){
+    	mManager.discoverPeers(mChannel,
+				new WifiP2pManager.ActionListener() {
+			@Override
+			public void onSuccess() {
+				Log.d("PeerList", "Peer discovery successful");
+			}
+
+			@Override
+			public void onFailure(int reasonCode) {
+				Log.d("PeerList", "Peer discovery failed");
+			}
+		});
     }
 
 }
