@@ -96,7 +96,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 		// The owner IP is now known.
 		TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
-		view.setText("Am I th Groupowner? "
+		view.setText("Am I the Groupowner? "
 				+ ((info.isGroupOwner == true) ? "YES" : "NO"));
 
 		// InetAddress from WifiP2pInfo struct.
