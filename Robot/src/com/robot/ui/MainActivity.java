@@ -63,9 +63,8 @@ public class MainActivity extends FragmentActivity {
 			consel.connectBT(bcr.isBTconnected());
 			return true;
 		case R.id.atn_scan_for_wd_peers:
-			// connect/disconnect via bluetooth
-			// Log.d("main", ""+bcr.isBTconnected());
-			//TODO code here ---
+			// connect/disconnect via wifi direct
+			consel.searchForPeers();
 			return true;
 		case R.id.atn_gyro:
 			// enable the gyro steering
