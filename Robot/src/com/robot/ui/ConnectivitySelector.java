@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,7 @@ public class ConnectivitySelector extends Fragment {
 
 	// the controller ui
 	ControlUnits cu;
+	PeerList pl;
 
 	View mContentView;
 	Context mContext;
@@ -70,7 +72,9 @@ public class ConnectivitySelector extends Fragment {
 		connectWifiButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// open the control screen fragment
+
+				pl = new PeerList();
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, (ListFragment) pl).addToBackStack("pl").commit();
 			}
 		});
 

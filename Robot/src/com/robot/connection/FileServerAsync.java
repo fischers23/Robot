@@ -41,6 +41,7 @@ public class FileServerAsync extends AsyncTask<Void, Void, String>{
             	Log.d("FileServer", text);
 //            	msg = (EditText)act.findViewById(R.id.sendTxt);
 //            	msg.setText(text);
+            	//TODO: ArduinoCommands passthrough
             }
             return "";
         } catch (IOException e) {

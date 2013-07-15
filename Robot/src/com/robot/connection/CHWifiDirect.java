@@ -2,6 +2,8 @@ package com.robot.connection;
 
 import java.io.IOException;
 
+import android.net.wifi.p2p.WifiP2pInfo;
+
 public class CHWifiDirect implements ConnectionHandlerInterface {
 
 	@Override
@@ -21,5 +23,6 @@ public class CHWifiDirect implements ConnectionHandlerInterface {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

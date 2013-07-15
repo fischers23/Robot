@@ -6,6 +6,8 @@ import java.util.List;
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.robot.R;
@@ -22,6 +25,8 @@ public class PeerList extends ListFragment implements PeerListListener{
 
 	private View mContentView;
 	private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+	private WifiP2pManager mManager;
+	private Channel mChannel;
 	
 	
 	@Override
@@ -36,7 +41,22 @@ public class PeerList extends ListFragment implements PeerListListener{
 		
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_wifi_list, container, false);
+		mManager = (WifiP2pManager) getActivity().getSystemService(Context.WIFI_P2P_SERVICE);
+		mChannel = mManager.initialize(getActivity(), getActivity().getMainLooper(), null);
+		
+		mManager.discoverPeers(mChannel,
+				new WifiP2pManager.ActionListener() {
+					@Override
+					public void onSuccess() {
+						Log.d("Main", "Peer discovery successful");
+					}
 
+					@Override
+					public void onFailure(int reasonCode) {
+						Log.d("Main", "Peer discovery failed");
+					}
+				});
+		
 		return mContentView;
 	}
 
@@ -96,6 +116,19 @@ public class PeerList extends ListFragment implements PeerListListener{
 
 	    }
 	}
+	
+    /**
+     * Initiate a connection with the peer.
+     */
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
+
+        PeerDetail pd = new PeerDetail();
+        pd.setDevice(device);
+        getFragmentManager().beginTransaction().replace(R.id.mainFragment, pd).addToBackStack("pd").commit();
+        
+    }
 
 }
 
