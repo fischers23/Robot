@@ -18,7 +18,7 @@ public class CHWifiDirect implements ConnectionHandlerInterface {
 	}
 	
 	@Override
-	public void sendData(String s) throws IOException {
+	public void sendData(String s) {
 
 		Intent serviceIntent = new Intent(act, TransferService.class);
 		serviceIntent.setAction(TransferService.ACTION_SEND_FILE);

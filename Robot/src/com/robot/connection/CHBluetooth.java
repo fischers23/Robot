@@ -77,7 +77,7 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 		mmOutputStream = mmSocket.getOutputStream();
 		mmInputStream = mmSocket.getInputStream();
 		Log.d("SendCommand", "Connected to device opened");
-//		beginListenForData();
+		// beginListenForData();
 	}
 
 	public void closeConnection() throws IOException {
@@ -87,58 +87,60 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 		Log.d("SendCommand", "Connected to device closed");
 	}
 
-	
-	public void sendData(String s) throws IOException {
-		//TODO: if (bcr.isConnected())
+	public void sendData(String s) {
+		try {
 			mmOutputStream.write(s.getBytes());
+		} catch (Exception e) {
+			Log.e("CHBluetooth", "error in BT communication");
+		}
 	}
 
-//	void beginListenForData() {
-//		final byte delimiter = 10; // This is the ASCII code for a newline
-//									// character
-//		readBufferPosition = 0;
-//		readBuffer = new byte[1024];
-//		
-//	    // Handler gets created on the UI-thread
-//	    Handler mHandler = mActivity.getWindow().getDecorView().getHandler();
-//	    
-//	    // This gets executed in a non-UI thread:
-//	        mHandler.post(new Runnable() {
-//	            @Override
-//	            public void run() {
-//	            	try {
-//						int bytesAvailable = mmInputStream.available();
-//						if (bytesAvailable > 0) {
-//							byte[] packetBytes = new byte[bytesAvailable];
-//							mmInputStream.read(packetBytes);
-//							for (int i = 0; i < bytesAvailable; i++) {
-//								byte b = packetBytes[i];
-//								if (b == delimiter) {
-//									byte[] encodedBytes = new byte[readBufferPosition];
-//									System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-//									final String data = new String(encodedBytes, "US-ASCII");
-//									readBufferPosition = 0;
-//
-//									float fl = Float.valueOf(data);
-//									mActivity.distanceLabel.setText(Integer.toString((int)fl));
-//
-//									
-//								} else {
-//									readBuffer[readBufferPosition++] = b;
-//								}
-//							}
-//						}
-//					} catch (Exception ex) {}
-//	            	
-//	            }
-//	        });
-//	    
-//
-//	}
+	// void beginListenForData() {
+	// final byte delimiter = 10; // This is the ASCII code for a newline
+	// // character
+	// readBufferPosition = 0;
+	// readBuffer = new byte[1024];
+	//
+	// // Handler gets created on the UI-thread
+	// Handler mHandler = mActivity.getWindow().getDecorView().getHandler();
+	//
+	// // This gets executed in a non-UI thread:
+	// mHandler.post(new Runnable() {
+	// @Override
+	// public void run() {
+	// try {
+	// int bytesAvailable = mmInputStream.available();
+	// if (bytesAvailable > 0) {
+	// byte[] packetBytes = new byte[bytesAvailable];
+	// mmInputStream.read(packetBytes);
+	// for (int i = 0; i < bytesAvailable; i++) {
+	// byte b = packetBytes[i];
+	// if (b == delimiter) {
+	// byte[] encodedBytes = new byte[readBufferPosition];
+	// System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
+	// final String data = new String(encodedBytes, "US-ASCII");
+	// readBufferPosition = 0;
+	//
+	// float fl = Float.valueOf(data);
+	// mActivity.distanceLabel.setText(Integer.toString((int)fl));
+	//
+	//
+	// } else {
+	// readBuffer[readBufferPosition++] = b;
+	// }
+	// }
+	// }
+	// } catch (Exception ex) {}
+	//
+	// }
+	// });
+	//
+	//
+	// }
 
-//	public int getDistance() {
-//		return distance;
-//	}
+	// public int getDistance() {
+	// return distance;
+	// }
 
 	public void showSettingsAlert() {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);

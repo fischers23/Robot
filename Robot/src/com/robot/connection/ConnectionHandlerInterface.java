@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface ConnectionHandlerInterface {
 
-	public void sendData(String s) throws IOException;
+	public void sendData(String s);
 
 	public void closeConnection() throws IOException;
 
