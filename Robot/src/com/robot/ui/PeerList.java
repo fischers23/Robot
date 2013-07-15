@@ -67,7 +67,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 		mChannel = mManager.initialize(getActivity(), getActivity()
 				.getMainLooper(), null);
 		
-		wrec = new WifiReceiver(getActivity(), mManager, mChannel);
+		wrec = new WifiReceiver(getActivity(), mManager, mChannel, this);
 		getActivity().registerReceiver(wrec, intentFilter);
 
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
@@ -187,12 +187,14 @@ class WifiReceiver extends BroadcastReceiver {
 	private Activity mActivity;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
+	private PeerList pl;
 
-	public WifiReceiver(Activity act, WifiP2pManager man, Channel chan) {
+	public WifiReceiver(Activity act, WifiP2pManager man, Channel chan, PeerList peerList) {
 
 		mActivity = act;
 		mManager = man;
 		mChannel = chan;
+		pl = peerList;
 	}
 
 	@Override
@@ -215,10 +217,9 @@ class WifiReceiver extends BroadcastReceiver {
 				// (PeerListListener) mActivity.getFragmentManager()
 				// .findFragmentById(R.id.mainFragment));
 				//
-				
+				Log.d("WIFIReceiver", "get Peers");
 
-				mManager.requestPeers(mChannel, (PeerListListener) mActivity
-						.getFragmentManager().findFragmentByTag("pl"));
+				mManager.requestPeers(mChannel, pl);
 
 			}
 
