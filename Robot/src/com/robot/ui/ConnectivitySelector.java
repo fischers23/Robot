@@ -76,7 +76,8 @@ public class ConnectivitySelector extends Fragment {
 			public void onClick(View v) {
 
 				pl = new PeerList();
-				getFragmentManager().beginTransaction().replace(R.id.mainFragment, pl).addToBackStack("pl").commit();
+				
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, pl, "pl").addToBackStack("pl").commit();
 			}
 		});
 

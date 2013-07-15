@@ -58,9 +58,13 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 			Log.d("GBR", "Peers available");
 			if (mManager != null) {
 				// mActivity.setContentView(R.layout.activity_detect_peers);
-				mManager.requestPeers(mChannel,
-						(PeerListListener) mActivity.getFragmentManager()
-								.findFragmentById(R.id.mainFragment));
+				// mManager.requestPeers(mChannel,
+				// (PeerListListener) mActivity.getFragmentManager()
+				// .findFragmentById(R.id.mainFragment));
+				//
+				Log.d("GBR", mActivity.getFragmentManager().findFragmentByTag("pl").toString());
+				mManager.requestPeers(mChannel, (PeerListListener) mActivity
+						.getFragmentManager().findFragmentByTag("pl"));
 			}
 
 		}

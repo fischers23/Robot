@@ -34,6 +34,7 @@ public class PeerList extends ListFragment implements PeerListListener{
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        
         this.setListAdapter(new PeerListAdapter(getActivity(), R.layout.peer_list_item, peers));
 
     }
@@ -69,7 +70,8 @@ public class PeerList extends ListFragment implements PeerListListener{
 
 	@Override
 	public void onPeersAvailable(WifiP2pDeviceList peerList) {
-
+		
+		Log.d("PeerList", "got some Peers");
 		peers.clear();
         peers.addAll(peerList.getDeviceList());
         ((PeerListAdapter) getListAdapter()).notifyDataSetChanged();
