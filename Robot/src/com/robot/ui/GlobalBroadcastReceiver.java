@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 
@@ -46,51 +47,15 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 			btConnected = false;
 		}
 
-		// Wifi-Direct broadcast receiver
-		else if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-			int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-			if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-				// Wifi Direct is enabled
-			} else {
-				// Wi-Fi Direct is not enabled
-			}
-		} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-			Log.d("GBR", "Peers available");
-			if (mManager != null) {
-				// mActivity.setContentView(R.layout.activity_detect_peers);
-				// mManager.requestPeers(mChannel,
-				// (PeerListListener) mActivity.getFragmentManager()
-				// .findFragmentById(R.id.mainFragment));
-				//
-				Log.d("GBR", mActivity.getFragmentManager().findFragmentByTag("pl").toString());
-				mManager.requestPeers(mChannel, (PeerListListener) mActivity
-						.getFragmentManager().findFragmentByTag("pl"));
-			}
-
-		}
-		//
-		// NetworkInfo networkInfo = (NetworkInfo)
-		// intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-		//
-		// if (networkInfo.isConnected()) {
-		//
-		// // we are connected with the other device, request connection
-		// // info to find group owner IP
-		//
-		// mManager.requestConnectionInfo(mChannel, mActivity);
-		// } else {
-		// // It's a disconnect
-		// // mActivity.resetData();
-		// }
-		// } else if
-		// (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-		// // Respond to this device's wifi state changing
-		// }
-
+		
 	}
 
 	public boolean isBTconnected() {
 		return btConnected;
+	}
+	
+	public void setManager(WifiP2pManager manager){
+		mManager = manager;
 	}
 
 }

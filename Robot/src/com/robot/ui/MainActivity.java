@@ -39,11 +39,7 @@ public class MainActivity extends FragmentActivity {
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 		
-        // add necessary intent values to be matched for wifi direct
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        
 
 	}
 
@@ -92,6 +88,10 @@ public class MainActivity extends FragmentActivity {
 
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+	
+	public void setManager(WifiP2pManager manager){
+		bcr.setManager(manager);
 	}
 
 }
