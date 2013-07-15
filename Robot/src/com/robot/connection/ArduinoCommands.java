@@ -1,7 +1,5 @@
 package com.robot.connection;
 
-
-
 public class ArduinoCommands {
 
 	ConnectionHandlerInterface sc;
@@ -12,29 +10,27 @@ public class ArduinoCommands {
 	}
 
 	public void driveSpeed(int i) {
-		if(i>=0 && i <= 255) {
-			String speed =Integer.toString(i);
-			while (speed.length() < 3) { 
-				speed = "0" + speed; 
-			} 
+		if (i >= 0 && i <= 255) {
+			String speed = Integer.toString(i);
+			while (speed.length() < 3) {
+				speed = "0" + speed;
+			}
 			send[0] = speed;
 		}
 		send();
 	}
-	
-	
+
 	public void steerSpeed(int i) {
-		if(i>=0 && i <= 255) {
-			String speed =Integer.toString(i);
-			while (speed.length() < 3) { 
-				speed = "0" + speed; 
-			} 
+		if (i >= 0 && i <= 255) {
+			String speed = Integer.toString(i);
+			while (speed.length() < 3) {
+				speed = "0" + speed;
+			}
 			send[1] = speed;
 		}
 		send();
 	}
-	
-	
+
 	public void forward(boolean state) {
 		if (state == true)
 			send[2] = "1";
@@ -68,12 +64,11 @@ public class ArduinoCommands {
 	}
 
 	public void send() {
-		try {
-			//TODO: sc.sendData(send[0] + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
-			sc.sendData("255" + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		// TODO: sc.sendData(send[0] + send[1] + send[2] + send[3] + send[4] +
+		// send[5] + "?");
+		sc.sendData("255" + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
+
 	}
 
 }
