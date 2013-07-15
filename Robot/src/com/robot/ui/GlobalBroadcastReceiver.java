@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.util.Log;
 import android.view.View;
 
 import com.robot.R;
@@ -54,6 +55,7 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 				// Wi-Fi Direct is not enabled
 			}
 		} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+			Log.d("GBR", "Peers available");
 			if (mManager != null) {
 				// mActivity.setContentView(R.layout.activity_detect_peers);
 				mManager.requestPeers(mChannel,

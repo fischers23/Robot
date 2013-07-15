@@ -131,5 +131,9 @@ public class ConnectivitySelector extends Fragment {
 			e.printStackTrace();
 		}
 	}
+	
+	public void searchForPeers(){
+		pl.discoverPeers();
+	}
 
 }
