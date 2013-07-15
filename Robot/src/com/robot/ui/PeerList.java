@@ -42,6 +42,11 @@ public class PeerList extends ListFragment implements PeerListListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		
+		// make known that we want to change the menu with this activity
+		setHasOptionsMenu(true);
+		
+		
 		mContentView = inflater.inflate(R.layout.fragment_wifi_list, container, false);
 		mManager = (WifiP2pManager) getActivity().getSystemService(Context.WIFI_P2P_SERVICE);
 		mChannel = mManager.initialize(getActivity(), getActivity().getMainLooper(), null);
