@@ -32,6 +32,8 @@ public class ConnectivitySelector extends Fragment {
 
 	View mContentView;
 	Context mContext;
+	
+	boolean BTconnected;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class ConnectivitySelector extends Fragment {
 		mContext = getActivity();
 
 		// make sure there is no pending connection
-		if (cHandler != null)
+		if (cHandler != null && !BTconnected)
 			try {
 				cHandler.closeConnection();
 			} catch (IOException e) {
@@ -90,6 +92,8 @@ public class ConnectivitySelector extends Fragment {
 	// this is called by the menu in the fragment_control_unit
 	public void connectBT(boolean BTconnected) {
 
+		this.BTconnected = BTconnected;
+		
 		// toggle connect
 		if (!BTconnected) {
 			Thread connectionThread = new Thread(new Runnable() {
