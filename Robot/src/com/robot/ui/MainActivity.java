@@ -1,6 +1,7 @@
 package com.robot.ui;
 
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -37,6 +38,12 @@ public class MainActivity extends FragmentActivity {
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+		
+        // add necessary intent values to be matched for wifi direct
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
 	}
 
@@ -54,6 +61,11 @@ public class MainActivity extends FragmentActivity {
 			// connect/disconnect via bluetooth
 			// Log.d("main", ""+bcr.isBTconnected());
 			consel.connectBT(bcr.isBTconnected());
+			return true;
+		case R.id.atn_scan_for_wd_peers:
+			// connect/disconnect via bluetooth
+			// Log.d("main", ""+bcr.isBTconnected());
+			//TODO code here ---
 			return true;
 		case R.id.atn_gyro:
 			// enable the gyro steering
