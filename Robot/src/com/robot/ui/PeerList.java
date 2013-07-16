@@ -34,7 +34,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 	private WifiP2pManager mManager;
 	private Channel mChannel;
 	private IntentFilter intentFilter = new IntentFilter();
-	private WifiReceiver wrec;
+	private WifiListReceiver wrec;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 		mChannel = mManager.initialize(getActivity(), getActivity()
 				.getMainLooper(), null);
 		
-		wrec = new WifiReceiver(getActivity(), mManager, mChannel, this);
+		wrec = new WifiListReceiver(getActivity(), mManager, mChannel, this);
 		getActivity().registerReceiver(wrec, intentFilter);
 
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
@@ -182,14 +182,14 @@ public class PeerList extends ListFragment implements PeerListListener {
 
 }
 
-class WifiReceiver extends BroadcastReceiver {
+class WifiListReceiver extends BroadcastReceiver {
 
 	private Activity mActivity;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
 	private PeerList pl;
 
-	public WifiReceiver(Activity act, WifiP2pManager man, Channel chan, PeerList peerList) {
+	public WifiListReceiver(Activity act, WifiP2pManager man, Channel chan, PeerList peerList) {
 
 		mActivity = act;
 		mManager = man;

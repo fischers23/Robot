@@ -1,5 +1,11 @@
 package com.robot.ui;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -18,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.robot.R;
+import com.robot.connection.ArduinoCommands;
+import com.robot.connection.CHWifiDirect;
 import com.robot.connection.FileServerAsync;
 
 public class PeerDetail extends Fragment implements ConnectionInfoListener {
@@ -26,6 +34,12 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	private View mContentView;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
+	private IntentFilter intentFilter;
+	private WifiDetailReceiver wdr;
+	private WifiP2pInfo info;
+	private CHWifiDirect wifi;
+	private ArduinoCommands ac;
+	private ControlUnits cu;
 
 	public void setDevice(WifiP2pDevice target) {
 
@@ -39,7 +53,16 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_wifi_detail,
 				container, false);
+		
+		// add necessary intent values to be matched for wifi direct
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
+        wdr = new WifiDetailReceiver(getActivity(), mManager, mChannel, this);
+        getActivity().registerReceiver(wdr, intentFilter);
+        
 		mContentView.findViewById(R.id.btn_connect).setOnClickListener(
 				new View.OnClickListener() {
 
@@ -65,7 +88,8 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 					}
 				});
-
+		
+		mContentView.findViewById(R.id.btn_disconnect).setVisibility(View.GONE);
 		mContentView.findViewById(R.id.btn_disconnect).setOnClickListener(
 				new View.OnClickListener() {
 
@@ -87,6 +111,22 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 				        });
 					}
 				});
+		
+		mContentView.findViewById(R.id.btn_start_client).setVisibility(View.GONE);
+		mContentView.findViewById(R.id.btn_start_client).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				wifi = new CHWifiDirect(getActivity(), info);
+				ac = new ArduinoCommands(wifi);
+				cu = new ControlUnits();
+				cu.setCommands(ac);
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu)
+				.addToBackStack("cu").commit();
+				
+			}
+		});
 
 		return mContentView;
 	}
@@ -94,6 +134,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
 
+		this.info = info;
 		// The owner IP is now known.
 		TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
 		view.setText("Am I the Groupowner? "
@@ -118,6 +159,45 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 		// hide the connect button
 		mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
-
+		mContentView.findViewById(R.id.btn_disconnect).setVisibility(View.VISIBLE);
+		mContentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
 	}
+}
+
+
+class WifiDetailReceiver extends BroadcastReceiver{
+
+	private WifiP2pManager mManager;
+	private Channel mChannel;
+	private Activity mActivity;
+	private PeerDetail pl;
+	
+	public WifiDetailReceiver(Activity act, WifiP2pManager manager, Channel channel, PeerDetail peerDetail){
+		mActivity = act;
+		mManager = manager;
+		mChannel = channel;
+		pl = peerDetail;
+	}
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+
+		String action = intent.getAction();
+		if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+
+            if (mManager == null) {
+                return;
+            }
+
+            NetworkInfo networkInfo = (NetworkInfo) intent
+                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+
+            if (networkInfo.isConnected()) {
+                // we are connected with the other device, request connection
+                // info to find group owner IP   
+                mManager.requestConnectionInfo(mChannel, pl);
+            } 
+		}
+	}
+	
 }
