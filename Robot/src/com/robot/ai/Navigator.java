@@ -38,6 +38,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 
 	public void init() {
 
+		//initialize the managers an request updates
 		sensorManager = (SensorManager) mActivity
 				.getSystemService(Context.SENSOR_SERVICE);
 		sensorAccelerometer = sensorManager
@@ -61,6 +62,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 	}
 
 	public void stop() {
+		//unregister the listeners
 		sensorManager.unregisterListener(this, sensorAccelerometer);
 		sensorManager.unregisterListener(this, sensorMagneticField);
 		locationManager.removeUpdates(this);
@@ -74,7 +76,8 @@ public class Navigator implements SensorEventListener, LocationListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-
+		
+		//calculates the current azimuth, pitch and roll
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_ACCELEROMETER:
 			for (int i = 0; i < 3; i++) {
