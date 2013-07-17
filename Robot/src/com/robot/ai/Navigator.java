@@ -117,6 +117,10 @@ public class Navigator implements SensorEventListener, LocationListener {
 		Location currentPos = getPosition();
 		return currentPos.bearingTo(dest);
 	}
+	
+	public double getAzimuth(){
+		return azimuth;
+	}
 
 	@Override
 	public void onLocationChanged(Location location) {
