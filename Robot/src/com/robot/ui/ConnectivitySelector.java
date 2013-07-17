@@ -32,7 +32,7 @@ public class ConnectivitySelector extends Fragment {
 
 	View mContentView;
 	Context mContext;
-	
+
 	boolean BTconnected;
 
 	@Override
@@ -42,12 +42,12 @@ public class ConnectivitySelector extends Fragment {
 		mContext = getActivity();
 
 		// make sure there is no pending connection
-//		if (cHandler != null && !BTconnected)
-//			try {
-//				cHandler.closeConnection();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+		// if (cHandler != null && !BTconnected)
+		// try {
+		// cHandler.closeConnection();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 		// This section handles the Bluetooth Button
 		ImageButton connectBTButton = (ImageButton) mContentView.findViewById(R.id.connect_bluetooth);
@@ -76,7 +76,7 @@ public class ConnectivitySelector extends Fragment {
 			public void onClick(View v) {
 
 				pl = new PeerList();
-				
+
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, pl, "pl").addToBackStack("pl").commit();
 			}
 		});
@@ -94,7 +94,7 @@ public class ConnectivitySelector extends Fragment {
 	public void connectBT(boolean BTconnected) {
 
 		this.BTconnected = BTconnected;
-		
+
 		// toggle connect
 		if (!BTconnected) {
 			Thread connectionThread = new Thread(new Runnable() {
@@ -132,8 +132,8 @@ public class ConnectivitySelector extends Fragment {
 			e.printStackTrace();
 		}
 	}
-	
-	public void searchForPeers(){
+
+	public void searchForPeers() {
 		pl.discoverPeers();
 	}
 

@@ -65,8 +65,6 @@ public class ArduinoCommands {
 
 	public void send() {
 
-		// TODO: sc.sendData(send[0] + send[1] + send[2] + send[3] + send[4] +
-		// send[5] + "?");
 		sc.sendData("255" + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
 
 	}
