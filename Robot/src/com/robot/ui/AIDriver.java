@@ -51,6 +51,10 @@ public class AIDriver extends Fragment  {
 	public void refresh(){
 		TextView tv = (TextView) mContentView.findViewById(R.id.azimuth);
 		tv.setText(""+navi.getAzimuth());
+		tv = (TextView) mContentView.findViewById(R.id.pitch);
+		tv.setText(""+navi.getPitch());
+		tv = (TextView) mContentView.findViewById(R.id.roll);
+		tv.setText(""+navi.getRoll());
 	}
 	
 	
