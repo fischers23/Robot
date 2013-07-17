@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
->
+    android:orientation="vertical" >
 
     <Space
         android:layout_width="10dp"
@@ -14,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Choose connection type"
-        android:textSize="22sp"
-        android:textColor="#000000" />
+        android:text="How do you want to drive today?"
+        android:textColor="#000000"
+        android:textSize="22sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -40,6 +39,18 @@
             android:layout_height="222dp"
             android:background="@null"
             android:src="@drawable/button_bt" />
+        
+                <Space
+            android:layout_width="30dp"
+            android:layout_height="10dp" />
+                
+                        <ImageButton
+            android:id="@+id/connect_ai"
+            android:layout_width="wrap_content"
+            android:layout_height="222dp"
+            android:background="@null"
+            android:src="@drawable/button_gps" />
+                
 
     </LinearLayout>
 

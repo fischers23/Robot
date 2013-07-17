@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.robot.R;
+import com.robot.ai.Navigator;
 import com.robot.connection.ArduinoCommands;
 import com.robot.connection.CHBluetooth;
 import com.robot.connection.ConnectionHandlerInterface;
@@ -81,6 +82,19 @@ public class ConnectivitySelector extends Fragment {
 			}
 		});
 
+		// This section handles the GPS Button
+		ImageButton connectAI = (ImageButton) mContentView.findViewById(R.id.connect_ai);
+		connectAI.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Navigator navi  = new Navigator(getActivity());
+				AIDriver aid = new AIDriver();
+
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, aid, "aid").addToBackStack("aid").commit();
+			}
+		});
+		
 		return mContentView;
 	}
 
