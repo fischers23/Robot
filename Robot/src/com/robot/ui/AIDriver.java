@@ -10,15 +10,25 @@ import android.widget.TextView;
 
 import com.robot.R;
 import com.robot.ai.Navigator;
+import com.robot.connection.ArduinoCommands;
 
 public class AIDriver extends Fragment  {
 
 	Navigator navi;
+
+	
+	// the arduino command set
+	ArduinoCommands driver = null;
+	
+
 	View mContentView;
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	
+
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 		
 		
@@ -36,8 +46,6 @@ public class AIDriver extends Fragment  {
 		});
 		
 		return mContentView;
-
-		
 	}
 	
 	public void refresh(){
@@ -48,6 +56,9 @@ public class AIDriver extends Fragment  {
 		tv = (TextView) mContentView.findViewById(R.id.roll);
 		tv.setText(""+navi.getRoll());
 	}
+	
+	
+	
 	
 	
 }

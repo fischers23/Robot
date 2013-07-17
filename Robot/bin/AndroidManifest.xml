@@ -16,8 +16,18 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.robot.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
     
+    <permission
+        android:name="com.robot.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -25,7 +35,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.robot.ui.MainActivity"
-            android:label="@string/app_name" 
+            android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAGZPpUWlim7OwtdopOH9ym-n6KZSTXfj4" />
     </application>
 
 </manifest>
