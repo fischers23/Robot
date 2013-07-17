@@ -56,12 +56,14 @@ public class ConnectivitySelector extends Fragment {
 			@Override
 			public void onClick(View v) {
 
+				// initialize the fragment
+				cu = new ControlUnits();
+				
 				// if not already done instantiate the BT connection handler
 				if (cHandler == null)
 					cHandler = new CHBluetooth(getActivity(), "Arduino");
 
 				// create the driver class
-				cu = new ControlUnits();
 				driver = new ArduinoCommands(cHandler);
 				cu.setCommands(driver);
 
@@ -76,6 +78,7 @@ public class ConnectivitySelector extends Fragment {
 			@Override
 			public void onClick(View v) {
 
+				// initialize the fragment
 				pl = new PeerList();
 
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, pl, "pl").addToBackStack("pl").commit();
@@ -88,24 +91,21 @@ public class ConnectivitySelector extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				
+				// initialize the AI fragment
 				AIDriver aid = new AIDriver();
-				
+
 				// if not already done instantiate the BT connection handler
 				if (cHandler == null)
 					cHandler = new CHBluetooth(getActivity(), "Arduino");
 
 				// create the driver class
-				cu = new ControlUnits();
 				driver = new ArduinoCommands(cHandler);
 				cu.setCommands(driver);
-				
-				
 
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, aid, "aid").addToBackStack("aid").commit();
 			}
 		});
-		
+
 		return mContentView;
 	}
 
