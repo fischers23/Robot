@@ -72,7 +72,9 @@ public class AIDriver extends Fragment  {
 	}
 	
 	
-	
+	public void setCommands(ArduinoCommands ac) {
+		driver = ac;
+	}
 	
 	
 }

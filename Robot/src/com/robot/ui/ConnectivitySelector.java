@@ -100,7 +100,7 @@ public class ConnectivitySelector extends Fragment {
 
 				// create the driver class
 				driver = new ArduinoCommands(cHandler);
-				cu.setCommands(driver);
+				aid.setCommands(driver);
 
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, aid, "aid").addToBackStack("aid").commit();
 			}
