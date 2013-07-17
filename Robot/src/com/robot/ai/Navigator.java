@@ -121,6 +121,14 @@ public class Navigator implements SensorEventListener, LocationListener {
 	public double getAzimuth(){
 		return azimuth;
 	}
+	
+	public double getPitch(){
+		return pitch;
+	}
+	
+	public double getRoll(){
+		return roll;
+	}
 
 	@Override
 	public void onLocationChanged(Location location) {
