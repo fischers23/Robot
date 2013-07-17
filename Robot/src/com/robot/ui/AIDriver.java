@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.robot.R;
+import com.robot.ai.CoordinatePicker;
 import com.robot.ai.Navigator;
 import com.robot.connection.ArduinoCommands;
 
@@ -42,6 +43,19 @@ public class AIDriver extends Fragment  {
 			public void onClick(View v) {
 				refresh();
 				
+			}
+		});
+		
+		Button mapOpen = (Button) mContentView.findViewById(R.id.map_open);
+		mapOpen.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// initialize the AI fragment
+				CoordinatePicker copi = new CoordinatePicker();
+				
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
+		
 			}
 		});
 		
