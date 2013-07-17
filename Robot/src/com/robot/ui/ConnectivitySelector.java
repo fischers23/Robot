@@ -88,8 +88,19 @@ public class ConnectivitySelector extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				Navigator navi  = new Navigator(getActivity());
+				
 				AIDriver aid = new AIDriver();
+				
+				// if not already done instantiate the BT connection handler
+				if (cHandler == null)
+					cHandler = new CHBluetooth(getActivity(), "Arduino");
+
+				// create the driver class
+				cu = new ControlUnits();
+				driver = new ArduinoCommands(cHandler);
+				cu.setCommands(driver);
+				
+				
 
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, aid, "aid").addToBackStack("aid").commit();
 			}
