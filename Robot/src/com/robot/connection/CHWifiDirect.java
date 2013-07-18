@@ -3,6 +3,7 @@ package com.robot.connection;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.util.Log;
 
@@ -11,10 +12,10 @@ import com.robot.ui.MainActivity;
 public class CHWifiDirect implements ConnectionHandlerInterface {
 
 	private WifiP2pInfo info;
-	private MainActivity act;
+	private Activity act;
 	
 	public CHWifiDirect(Activity activity, WifiP2pInfo inf){
-		act = (MainActivity) activity;
+		act = activity;
 		info=inf;
 	}
 	
@@ -23,7 +24,14 @@ public class CHWifiDirect implements ConnectionHandlerInterface {
 
 		Log.d("WIFIHandler","making Intent");
 		Log.d("WIFIHandler","send String: " + s);
-		act.startTransferService(info, s);
+		
+		Intent serviceIntent = new Intent(act, TransferService.class);
+		serviceIntent.setAction(TransferService.ACTION_SEND_FILE);
+		serviceIntent.putExtra(TransferService.EXTRAS_SEND_TEXT, s);
+		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_ADDRESS,
+				info.groupOwnerAddress.getHostAddress());
+		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+		act.startService(serviceIntent);
 
 	}
 

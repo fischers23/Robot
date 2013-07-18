@@ -96,19 +96,9 @@ public class MainActivity extends FragmentActivity {
 		super.onDestroy();
 	}
 	
-	public void setManager(WifiP2pManager manager){
-		bcr.setManager(manager);
-	}
+//	public void setManager(WifiP2pManager manager){
+//		bcr.setManager(manager);
+//	}
 	
-	public void startTransferService(WifiP2pInfo info,String s){
-		
-		Intent serviceIntent = new Intent(this, TransferService.class);
-		serviceIntent.setAction(TransferService.ACTION_SEND_FILE);
-		serviceIntent.putExtra(TransferService.EXTRAS_SEND_TEXT, s);
-		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_ADDRESS,
-				info.groupOwnerAddress.getHostAddress());
-		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
-		startService(serviceIntent);
-	}
 
 }
