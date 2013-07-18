@@ -12,7 +12,7 @@ import com.robot.R;
 
 public class MainActivity extends FragmentActivity {
 
-	GlobalBroadcastReceiver bcr = null;
+	BluetoothBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
 	ConnectivitySelector consel;
 
@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		// create the broadcast receiver
-		bcr = new GlobalBroadcastReceiver(this);
+		bcr = new BluetoothBroadcastReceiver(this);
 		
 		// open the welcome screen
 		setContentView(R.layout.main_activity);

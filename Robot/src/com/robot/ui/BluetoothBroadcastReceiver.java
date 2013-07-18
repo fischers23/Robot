@@ -6,14 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class GlobalBroadcastReceiver extends BroadcastReceiver {
+public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 
 
 	Activity mActivity;
 
 	private boolean btConnected = false;
 
-	public GlobalBroadcastReceiver(Activity activity) {
+	public BluetoothBroadcastReceiver(Activity activity) {
 		mActivity = activity;
 	}
 
