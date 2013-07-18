@@ -24,9 +24,15 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 	public FileServerAsync(Activity act) {
 		this.act = act;
 		// if not already done instantiate the BT connection handler
-		if (cHandler == null)
+		if (cHandler == null){
 			cHandler = new CHBluetooth(act, "Arduino");
-
+			try {
+				cHandler.establishConnection();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Log.d("FileServer", "Server created");
 		
 	}
@@ -56,6 +62,15 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 		} catch (IOException e) {
 			Log.e("FileServer", e.getMessage());
 			return "";
+		}
+	}
+	
+	public void stop(){
+		try {
+			cHandler.closeConnection();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
