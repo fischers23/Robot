@@ -41,6 +41,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	private CHWifiDirect wifi;
 	private ArduinoCommands ac;
 	private ControlUnits cu;
+	private FileServerAsync fs = null;
 
 	public void init(WifiP2pDevice target, WifiP2pManager man, Channel chan) {
 
@@ -57,11 +58,6 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		mContentView = inflater.inflate(R.layout.fragment_wifi_detail,
 				container, false);
 		
-		// add necessary intent values to be matched for wifi direct
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-//        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         wdr = new WifiDetailReceiver(getActivity(), mManager, mChannel, this);
        
@@ -79,7 +75,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 				            @Override
 				            public void onSuccess() {
-				                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+				                Log.d("PeerDetail","conecting...");
 				            }
 
 				            @Override
@@ -156,7 +152,8 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		// server. The file server is single threaded, single connection server
 		// socket.
 		if (info.groupFormed && info.isGroupOwner) {
-			new FileServerAsync(getActivity()).execute();
+			fs = new FileServerAsync(getActivity());
+			fs.execute();
 		} 
 
 		// hide the connect button
@@ -167,12 +164,20 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	
 	public void onResume(){
 		super.onResume();
+		intentFilter = new IntentFilter();
+		// add necessary intent values to be matched for wifi direct
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+//        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 		 getActivity().registerReceiver(wdr, intentFilter);
 	}
 	
 	public void onPause(){
 		super.onPause();
 		getActivity().unregisterReceiver(wdr);
+		if(fs != null)
+			fs.stop();
 	}
 }
 
@@ -196,14 +201,14 @@ class WifiDetailReceiver extends BroadcastReceiver{
 
 		String action = intent.getAction();
 		if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-
+			Log.d("WifiDietailReceiver","Got some info");
             if (mManager == null) {
                 return;
             }
-
+            Log.d("WifiDetailReceiver", "Manager != null");
             NetworkInfo networkInfo = (NetworkInfo) intent
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
+            Log.d("WifiDetailReceiver",(networkInfo.isConnected() == true) ? "true" : "false");
             if (networkInfo.isConnected()) {
                 // we are connected with the other device, request connection
                 // info to find group owner IP   
