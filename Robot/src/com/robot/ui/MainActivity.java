@@ -32,7 +32,7 @@ public class MainActivity extends FragmentActivity {
 		// fill the welcome screen with the connectivity selection fragment
 		if (savedInstanceState == null) {
 			consel = new ConnectivitySelector();
-			getSupportFragmentManager().beginTransaction().add(R.id.mainFragment, consel).commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.mainFragment, consel, "consel").commit();
 		}
 
 		// register BlueTooth intent filter to get nofified as BT is connected

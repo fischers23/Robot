@@ -20,7 +20,8 @@
         android:id="@+id/my_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/button_slider_vert" />
+        android:src="@drawable/button_slider_vert"
+        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="107dp"
@@ -70,7 +71,8 @@
             android:id="@+id/my_steer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_slider_horiz" />
+            android:src="@drawable/button_slider_horiz"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

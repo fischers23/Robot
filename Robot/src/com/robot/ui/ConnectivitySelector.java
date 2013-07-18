@@ -65,7 +65,7 @@ public class ConnectivitySelector extends Fragment {
 				cu.setCommands(driver);
 
 				// open the control screen fragment
-				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu, "cu").addToBackStack("cu").commit();
 			}
 		});
 
