@@ -1,5 +1,7 @@
 package com.robot.connection;
 
+import android.util.Log;
+
 public class ArduinoCommands {
 
 	ConnectionHandlerInterface sc;
@@ -63,10 +65,54 @@ public class ArduinoCommands {
 		send();
 	}
 
+	public void forwardWithSpeed(int i) {
+		send[2] = "1"; // forward
+		send[3] = "0"; // not backward
+		String speed = Integer.toString(i);
+		while (speed.length() < 3) {
+			speed = "0" + speed;
+		}
+		send[0] = speed;
+		send();
+	}
+
+	public void backwardWithSpeed(int i) {
+		send[2] = "0"; // not forward
+		send[3] = "1"; // backward
+		String speed = Integer.toString(i);
+		while (speed.length() < 3) {
+			speed = "0" + speed;
+		}
+		send[0] = speed;
+		send();
+	}
+	
+	public void leftWithSpeed(int i) {
+		send[4] = "1"; // left
+		send[5] = "0"; // not right
+		String speed = Integer.toString(i);
+		while (speed.length() < 3) {
+			speed = "0" + speed;
+		}
+		send[1] = speed;
+		send();
+	}
+	
+	public void rightWithSpeed(int i) {
+		send[4] = "0"; // not left
+		send[5] = "1"; // right
+		String speed = Integer.toString(i);
+		while (speed.length() < 3) {
+			speed = "0" + speed;
+		}
+		send[1] = speed;
+		send();
+	}
+
 	public void send() {
 
-		sc.sendData("255" + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
-
+		sc.sendData(send[0] + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
+		Log.d("ArduinoCommand", "" + send[0] + send[1] + send[2] + send[3] + send[4] + send[5]);
 	}
 
 }
