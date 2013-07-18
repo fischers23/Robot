@@ -29,6 +29,7 @@ public class TransferService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
+		Log.d("TransferService", "handle intent");
 		if (intent.getAction().equals(ACTION_SEND_FILE)) {
 			String text = intent.getExtras().getString(EXTRAS_SEND_TEXT);
 			String host = intent.getExtras().getString(

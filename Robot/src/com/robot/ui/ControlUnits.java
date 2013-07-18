@@ -40,6 +40,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onCreate(savedInstanceState);
 		View mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
+		
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
 		Toast.makeText(getActivity(), "Press connect to start!", Toast.LENGTH_LONG).show();
@@ -118,6 +119,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
 	}
 
 	@Override
@@ -178,6 +180,8 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onResume();
 		// register the gyro sensor
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+		//TODO remove this
+		buttonsAvailable(View.VISIBLE);
 	}
 
 	@Override

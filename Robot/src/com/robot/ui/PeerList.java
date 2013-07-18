@@ -54,7 +54,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 		// add necessary intent values to be matched for wifi direct
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+//        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
 		// make known that we want to change the menu with this activity
@@ -68,7 +68,6 @@ public class PeerList extends ListFragment implements PeerListListener {
 				.getMainLooper(), null);
 		
 		wrec = new WifiListReceiver(getActivity(), mManager, mChannel, this);
-		getActivity().registerReceiver(wrec, intentFilter);
 
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 			@Override
@@ -160,7 +159,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 				position);
 
 		PeerDetail pd = new PeerDetail();
-		pd.setDevice(device);
+		pd.init(device, mManager, mChannel);
 		getFragmentManager().beginTransaction().replace(R.id.mainFragment, pd)
 				.addToBackStack("pd").commit();
 
@@ -180,6 +179,15 @@ public class PeerList extends ListFragment implements PeerListListener {
 		});
 	}
 
+	public void onResume(){
+		super.onResume();
+		getActivity().registerReceiver(wrec, intentFilter);
+	}
+	
+	public void onPause(){
+		super.onPause();
+		getActivity().unregisterReceiver(wrec);
+	}
 }
 
 class WifiListReceiver extends BroadcastReceiver {

@@ -27,8 +27,8 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 		if (cHandler == null)
 			cHandler = new CHBluetooth(act, "Arduino");
 
-		// create the driver class
-
+		Log.d("FileServer", "Server created");
+		
 	}
 
 	@Override
