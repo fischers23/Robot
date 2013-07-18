@@ -96,9 +96,6 @@ public class MainActivity extends FragmentActivity {
 		super.onDestroy();
 	}
 	
-	public void setManager(WifiP2pManager manager){
-		bcr.setManager(manager);
-	}
-	
+
 
 }

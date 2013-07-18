@@ -17,11 +17,10 @@ import android.view.View;
 import com.robot.R;
 
 public class GlobalBroadcastReceiver extends BroadcastReceiver {
-	BluetoothAdapter mBluetoothAdapter;
-	String deviceName;
+
+
 	Activity mActivity;
-	private WifiP2pManager mManager;
-	private Channel mChannel;
+
 	private boolean btConnected = false;
 
 	public GlobalBroadcastReceiver(Activity activity) {
@@ -54,8 +53,6 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
 		return btConnected;
 	}
 	
-	public void setManager(WifiP2pManager manager){
-		mManager = manager;
-	}
+
 
 }
