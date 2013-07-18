@@ -1,6 +1,8 @@
 package com.robot.ui;
 
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.robot.R;
+import com.robot.connection.TransferService;
 
 public class MainActivity extends FragmentActivity {
 
@@ -95,6 +98,17 @@ public class MainActivity extends FragmentActivity {
 	
 	public void setManager(WifiP2pManager manager){
 		bcr.setManager(manager);
+	}
+	
+	public void startTransferService(WifiP2pInfo info,String s){
+		
+		Intent serviceIntent = new Intent(this, TransferService.class);
+		serviceIntent.setAction(TransferService.ACTION_SEND_FILE);
+		serviceIntent.putExtra(TransferService.EXTRAS_SEND_TEXT, s);
+		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_ADDRESS,
+				info.groupOwnerAddress.getHostAddress());
+		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+		startService(serviceIntent);
 	}
 
 }
