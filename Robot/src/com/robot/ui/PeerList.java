@@ -78,6 +78,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 			@Override
 			public void onFailure(int reasonCode) {
 				Log.d("PeerList", "Peer discovery failed");
+				Log.d("PeerList","ReasonCode: " + reasonCode);
 			}
 		});
 

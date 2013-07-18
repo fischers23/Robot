@@ -19,12 +19,12 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 	Activity act;
 	private CHWifiDirect wd;
 	private ConnectionHandlerInterface cHandler;
-
+	private boolean listen = true;
 
 	public FileServerAsync(Activity act) {
 		this.act = act;
 		// if not already done instantiate the BT connection handler
-		if (cHandler == null){
+		if (cHandler == null) {
 			cHandler = new CHBluetooth(act, "Arduino");
 			try {
 				cHandler.establishConnection();
@@ -34,29 +34,33 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 			}
 		}
 		Log.d("FileServer", "Server created");
-		
+
 	}
 
 	@Override
 	protected String doInBackground(Void... arg0) {
 
 		try {
-			ServerSocket serverSocket = new ServerSocket(8988);
-			Log.d("FileServer", "Server: Socket opened");
-			Socket client = serverSocket.accept();
-			Log.d("FileServer", "Server: connection done");
+			
+			while (listen) {
+				ServerSocket serverSocket = new ServerSocket(8988);
+				Log.d("FileServer", "Server: Socket opened");
+				Socket client = serverSocket.accept();
+				Log.d("FileServer", "Server: connection done");
 
-			InputStream inputstream = client.getInputStream();
-			java.util.Scanner s = new java.util.Scanner(inputstream)
-					.useDelimiter("\\A");
-			String text = s.hasNext() ? s.next() : "";
-			serverSocket.close();
-			if (text != "") {
-				Log.d("FileServer", text);
-				// msg = (EditText)act.findViewById(R.id.sendTxt);
-				// msg.setText(text);
-				// TODO: ArduinoCommands passthrough
-				cHandler.sendData(text);
+				InputStream inputstream = client.getInputStream();
+				java.util.Scanner s = new java.util.Scanner(inputstream)
+						.useDelimiter("\\A");
+				String text = s.hasNext() ? s.next() : "";
+				serverSocket.close();
+				if (text != "") {
+					Log.d("FileServer", text);
+					// msg = (EditText)act.findViewById(R.id.sendTxt);
+					// msg.setText(text);
+					// TODO: ArduinoCommands passthrough
+					cHandler.sendData(text);
+				}
+				
 			}
 			return "";
 		} catch (IOException e) {
@@ -64,10 +68,11 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 			return "";
 		}
 	}
-	
-	public void stop(){
+
+	public void stop() {
 		try {
 			cHandler.closeConnection();
+			listen = false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

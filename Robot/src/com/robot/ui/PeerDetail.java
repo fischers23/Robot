@@ -201,14 +201,14 @@ class WifiDetailReceiver extends BroadcastReceiver{
 
 		String action = intent.getAction();
 		if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-
+			Log.d("WifiDietailReceiver","Got some info");
             if (mManager == null) {
                 return;
             }
-
+            Log.d("WifiDetailReceiver", "Manager != null");
             NetworkInfo networkInfo = (NetworkInfo) intent
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
+            Log.d("WifiDetailReceiver",(networkInfo.isConnected() == true) ? "true" : "false");
             if (networkInfo.isConnected()) {
                 // we are connected with the other device, request connection
                 // info to find group owner IP   
