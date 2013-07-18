@@ -10,6 +10,12 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical" >
 
+        <com.robot.ui.CVSliderSpeed
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_view" />
+        
+        
         <ImageView
             android:id="@+id/forward"
             android:layout_width="115dp"
