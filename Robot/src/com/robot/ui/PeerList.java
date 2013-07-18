@@ -3,7 +3,6 @@ package com.robot.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +66,7 @@ public class PeerList extends ListFragment implements PeerListListener {
 		mChannel = mManager.initialize(getActivity(), getActivity()
 				.getMainLooper(), null);
 		
-		wrec = new WifiListReceiver(getActivity(), mManager, mChannel, this);
+		wrec = new WifiListReceiver(mManager, mChannel, this);
 
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 			@Override
@@ -193,14 +192,11 @@ public class PeerList extends ListFragment implements PeerListListener {
 
 class WifiListReceiver extends BroadcastReceiver {
 
-	private Activity mActivity;
 	private WifiP2pManager mManager;
 	private Channel mChannel;
 	private PeerList pl;
 
-	public WifiListReceiver(Activity act, WifiP2pManager man, Channel chan, PeerList peerList) {
-
-		mActivity = act;
+	public WifiListReceiver(WifiP2pManager man, Channel chan, PeerList peerList) {
 		mManager = man;
 		mChannel = chan;
 		pl = peerList;

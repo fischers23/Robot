@@ -1,9 +1,6 @@
 package com.robot.ui;
 
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pInfo;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -12,7 +9,6 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.robot.R;
-import com.robot.connection.TransferService;
 
 public class MainActivity extends FragmentActivity {
 
