@@ -10,6 +10,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.widget.TextView;
+
+import com.robot.R;
 
 public class Navigator implements SensorEventListener, LocationListener {
 
@@ -29,15 +34,19 @@ public class Navigator implements SensorEventListener, LocationListener {
 	private double azimuth;
 	private double pitch;
 	private double roll;
+	
+	private Fragment frag;
 
 	public Navigator(Activity act) {
 
 		mActivity = act;
+		frag = null;
 
 	}
 
-	public void init() {
-
+	public void init(Fragment f) {
+		
+		frag = f;
 		//initialize the managers an request updates
 		sensorManager = (SensorManager) mActivity
 				.getSystemService(Context.SENSOR_SERVICE);
@@ -66,6 +75,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 		sensorManager.unregisterListener(this, sensorAccelerometer);
 		sensorManager.unregisterListener(this, sensorMagneticField);
 		locationManager.removeUpdates(this);
+		frag = null;
 	}
 
 	@Override
@@ -100,6 +110,11 @@ public class Navigator implements SensorEventListener, LocationListener {
 			azimuth = Math.toDegrees(matrixValues[0]);
 			pitch = Math.toDegrees(matrixValues[1]);
 			roll = Math.toDegrees(matrixValues[2]);
+			
+			if(frag != null){
+				TextView t = (TextView) frag.getActivity().findViewById(R.id.azimuth);
+				t.setText(""+azimuth);
+			}
 
 			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));
 			// readingPitch.setText("Pitch: " + String.valueOf(pitch));

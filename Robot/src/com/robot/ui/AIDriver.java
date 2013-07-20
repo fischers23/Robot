@@ -1,5 +1,11 @@
 package com.robot.ui;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -67,10 +73,10 @@ public class AIDriver extends Fragment {
 	public void refresh() {
 		TextView tv = (TextView) mContentView.findViewById(R.id.azimuth);
 		tv.setText("" + navi.getAzimuth());
-		tv = (TextView) mContentView.findViewById(R.id.pitch);
-		tv.setText("" + navi.getPitch());
-		tv = (TextView) mContentView.findViewById(R.id.roll);
-		tv.setText("" + navi.getRoll());
+//		tv = (TextView) mContentView.findViewById(R.id.pitch);
+//		tv.setText("" + navi.getPitch());
+//		tv = (TextView) mContentView.findViewById(R.id.roll);
+//		tv.setText("" + navi.getRoll());
 	}
 
 	public void setCommands(ArduinoCommands ac) {
@@ -79,12 +85,14 @@ public class AIDriver extends Fragment {
 	
 	public void onResume(){
 		super.onResume();
-		navi.init();
+		navi.init(this);
 	}
 	
 	public void onPause(){
 		super.onPause();
 		navi.stop();
 	}
+
+
 
 }
