@@ -1,6 +1,5 @@
 package com.robot.ai;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;

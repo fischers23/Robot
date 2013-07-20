@@ -8,15 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.google.android.gms.internal.bt;
 import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;

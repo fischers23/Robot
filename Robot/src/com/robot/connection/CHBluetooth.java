@@ -16,8 +16,6 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.robot.ui.ConnectivitySelector;
-
 public class CHBluetooth implements ConnectionHandlerInterface {
 
 	BluetoothAdapter mBluetoothAdapter;
@@ -57,7 +55,7 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 		// find the Arduino in the Androids pairing list
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		// avoid null pointer exception
-		if (pairedDevices == null )
+		if (pairedDevices == null)
 			return false;
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
