@@ -1,6 +1,5 @@
 package com.robot.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -59,7 +58,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 				container, false);
 		
 
-        wdr = new WifiDetailReceiver(getActivity(), mManager, mChannel, this);
+        wdr = new WifiDetailReceiver(mManager, mChannel, this);
        
         
 		mContentView.findViewById(R.id.btn_connect).setOnClickListener(
@@ -186,11 +185,9 @@ class WifiDetailReceiver extends BroadcastReceiver{
 
 	private WifiP2pManager mManager;
 	private Channel mChannel;
-	private Activity mActivity;
 	private PeerDetail pl;
 	
-	public WifiDetailReceiver(Activity act, WifiP2pManager manager, Channel channel, PeerDetail peerDetail){
-		mActivity = act;
+	public WifiDetailReceiver(WifiP2pManager manager, Channel channel, PeerDetail peerDetail){
 		mManager = manager;
 		mChannel = channel;
 		pl = peerDetail;

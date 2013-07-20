@@ -1,15 +1,13 @@
 package com.robot.ui;
 
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,13 +32,17 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	SensorManager sensorManager = null;
 	Sensor sensor;
 	float mLastY;
+	// the speed control custom view
+	ImageView speed_view;
+	ImageView steer_view;
+	float last_y = 0;
+	float last_x = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View mContentView = inflater.inflate(R.layout.fragment_control_unit, container, false);
 
-		
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
 		Toast.makeText(getActivity(), "Press connect to start!", Toast.LENGTH_LONG).show();
@@ -51,64 +53,94 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
 
-		// list of buttons to steer
-		// steer forward
-		ImageView forward = (ImageView) mContentView.findViewById(R.id.forward);
-		forward.setOnTouchListener(new View.OnTouchListener() {
+		// forward/backward driving
+		speed_view = (ImageView) mContentView.findViewById(R.id.my_speed);
+		speed_view.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					driver.driveSpeed(255);
-					driver.forward(true);
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					driver.forward(false);
-				}
-				return true;
-			}
-		});
-		// steer bachward
-		ImageView back = (ImageView) mContentView.findViewById(R.id.back);
-		back.setOnTouchListener(new View.OnTouchListener() {
+				int action = MotionEventCompat.getActionMasked(event);
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					driver.driveSpeed(255);
-					driver.backward(true);
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				if ((action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_DOWN) && action != MotionEvent.ACTION_OUTSIDE) {
+					// get the height of our view
+					int height = speed_view.getHeight();
+					float y = event.getY();
+					
+					// do not send to often
+					if(Math.abs(last_y-y) < 20)
+						return true;
+					last_y = y;
+					
+					// get the ratio
+					float ratio = 255f / (height / 2);
+
+					if (y < height / 2) { // forward
+						float speed = (((height / 2) - y) * ratio);
+						if (speed <= 255f) {
+							driver.forwardWithSpeed((int) speed);
+						} else {
+							driver.forwardWithSpeed(255);
+						}
+					} else { // backward
+						float speed = (y - (height / 2)) * ratio;
+						if (speed <= 255f) {
+							driver.backwardWithSpeed((int)speed);
+						} else {
+							driver.backwardWithSpeed(255);
+						}
+					}
+				}
+				if (action == MotionEvent.ACTION_UP) {
+					last_y = 0;
+					driver.forward(false);
 					driver.backward(false);
 				}
 				return true;
 			}
 		});
-		// steer left
-		ImageView left = (ImageView) mContentView.findViewById(R.id.left);
-		left.setOnTouchListener(new View.OnTouchListener() {
 
+		// left/right steering
+		steer_view = (ImageView) mContentView.findViewById(R.id.my_steer);
+		steer_view.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					driver.steerSpeed(255);
-					driver.left(true);
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					driver.left(false);
+				int action = MotionEventCompat.getActionMasked(event);
+
+				if ((action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_DOWN) && action != MotionEvent.ACTION_OUTSIDE) {
+					// get the width of our view
+					int width = steer_view.getWidth();
+
+					// do not send to often
+					float x = event.getX();
+					if(Math.abs(last_x-x) < 20)
+						return true;
+					last_x = x;
+					
+					// get the ratio
+					float ratio = 255f / (width / 2);
+
+					if (x < width / 2) { // left
+						float speed = (((width / 2) - x) * ratio);
+						if (speed <= 255f) {
+							 driver.leftWithSpeed((int)speed);
+						} else {
+							driver.driveSpeed(255);
+						}
+					} else { // right
+						float speed = (x - (width / 2)) * ratio;
+						if (speed <= 255f) {
+							driver.rightWithSpeed((int)speed);
+						} else {
+							driver.driveSpeed(255);
+						}
+					}
 				}
-				return true;
-			}
-		});
-		// steer right
-		ImageView right = (ImageView) mContentView.findViewById(R.id.right);
-		right.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					driver.steerSpeed(255);
-					driver.right(true);
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				if (action == MotionEvent.ACTION_UP) {
+					last_x = 0;
+					driver.left(false);
 					driver.right(false);
 				}
 				return true;
+				
 			}
 		});
 
@@ -119,7 +151,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 	}
 
 	@Override
@@ -180,7 +212,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onResume();
 		// register the gyro sensor
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-		//TODO remove this
+		// TODO remove this
 		buttonsAvailable(View.VISIBLE);
 	}
 
@@ -200,15 +232,13 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			sensorLabel.setText("on");
 	}
 
-
 	// toggle the visibility of the steering buttons as
 	// we are connected/disconnected
 	public void buttonsAvailable(int i) {
 		if (i == View.VISIBLE || i == View.INVISIBLE) {
-			getActivity().findViewById(R.id.forward).setVisibility(i);
-			getActivity().findViewById(R.id.back).setVisibility(i);
-			getActivity().findViewById(R.id.left).setVisibility(i);
-			getActivity().findViewById(R.id.right).setVisibility(i);
+			getActivity().findViewById(R.id.my_speed).setVisibility(i);
+			getActivity().findViewById(R.id.my_steer).setVisibility(i);
+
 		}
 	}
 

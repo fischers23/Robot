@@ -5,16 +5,13 @@ import java.io.IOException;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.robot.R;
-import com.robot.ai.Navigator;
 import com.robot.connection.ArduinoCommands;
 import com.robot.connection.CHBluetooth;
 import com.robot.connection.ConnectionHandlerInterface;
@@ -68,7 +65,7 @@ public class ConnectivitySelector extends Fragment {
 				cu.setCommands(driver);
 
 				// open the control screen fragment
-				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu, "cu").addToBackStack("cu").commit();
 			}
 		});
 

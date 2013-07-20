@@ -1,9 +1,6 @@
 package com.robot.ui;
 
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pInfo;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -12,11 +9,10 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.robot.R;
-import com.robot.connection.TransferService;
 
 public class MainActivity extends FragmentActivity {
 
-	GlobalBroadcastReceiver bcr = null;
+	BluetoothBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
 	ConnectivitySelector consel;
 
@@ -28,7 +24,7 @@ public class MainActivity extends FragmentActivity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		// create the broadcast receiver
-		bcr = new GlobalBroadcastReceiver(this);
+		bcr = new BluetoothBroadcastReceiver(this);
 		
 		// open the welcome screen
 		setContentView(R.layout.main_activity);
@@ -36,7 +32,7 @@ public class MainActivity extends FragmentActivity {
 		// fill the welcome screen with the connectivity selection fragment
 		if (savedInstanceState == null) {
 			consel = new ConnectivitySelector();
-			getSupportFragmentManager().beginTransaction().add(R.id.mainFragment, consel).commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.mainFragment, consel, "consel").commit();
 		}
 
 		// register BlueTooth intent filter to get nofified as BT is connected
@@ -96,9 +92,6 @@ public class MainActivity extends FragmentActivity {
 		super.onDestroy();
 	}
 	
-	public void setManager(WifiP2pManager manager){
-		bcr.setManager(manager);
-	}
-	
+
 
 }
