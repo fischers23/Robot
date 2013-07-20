@@ -84,11 +84,13 @@ public class AIDriver extends Fragment {
 
 		if (loc != null) {
 			bearing = navi.getBearing(loc);
-			//bearing is the angle on a north faced map
-			//adjust the angle regarding the direction in which we look
+			// bearing is the angle on a north faced map
+			// adjust the angle regarding the direction in which we look
 			float az = navi.getAzimuth();
-			drawArrow(Math.abs(bearing - az));
-
+			if (az < bearing)
+				drawArrow(Math.abs(bearing - az));
+			else
+				drawArrow(360 - Math.abs(bearing - az));
 		}
 
 	}
@@ -174,36 +176,36 @@ public class AIDriver extends Fragment {
 	public void startAIDrive() {
 
 		alignToDest();
-		
-		while(!destinationReached()){
-			
-			if(Math.abs(deltaAngle()) > 10f){
+
+		while (!destinationReached()) {
+
+			if (Math.abs(deltaAngle()) > 10f) {
 				driver.stop();
 				alignToDest();
 			}
 			driver.forward(true);
 		}
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @return boolean
 	 */
-	private boolean destinationReached(){
-		
-		if(navi.getPosition().distanceTo(loc) <= 5){
+	private boolean destinationReached() {
+
+		if (navi.getPosition().distanceTo(loc) <= 5) {
 			return true;
 		}
 		return false;
 	}
-	
-	private float deltaAngle(){
+
+	private float deltaAngle() {
 		return navi.getAzimuth() - bearing;
 	}
-	
-	private void alignToDest(){
-		
+
+	private void alignToDest() {
+
 		while (Math.abs(deltaAngle()) > 10) {
 			if ((navi.getAzimuth() - bearing) > 0)
 				driver.left(true);
