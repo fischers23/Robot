@@ -34,7 +34,6 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 		mActivity = activity;
 		this.deviceName = deviceName;
 		enableBluetooth();
-		findArduino();
 	}
 
 	public void enableBluetooth() {
@@ -51,33 +50,41 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 		Log.d("SendCommand", "Bluetooth adapter ready");
 	}
 
-	public void findArduino() {
+	public boolean findArduino() {
 		// this case assumes we already found the Arduino
 		if (mmDevice != null && mmDevice.getName().equals(deviceName))
-			return;
+			return true;
 		// find the Arduino in the Androids pairing list
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+		// avoid null pointer exception
+		if (pairedDevices == null )
+			return false;
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
 				if (device.getName().equals(deviceName)) {
 					mmDevice = device;
 					Log.d("SendCommand", "Bluetooth Device " + mmDevice.getName() + " found in pairing list");
-					return;
+					return true;
 				}
 			}
 		}
 		// error message in case we device is not paired
 		Log.e("SendCommand", "Bluetooth Device " + deviceName + " not found");
+		return false;
 	}
 
 	public void establishConnection() throws IOException {
-		UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); // Standard
-		mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-		mmSocket.connect();
-		mmOutputStream = mmSocket.getOutputStream();
-		mmInputStream = mmSocket.getInputStream();
-		Log.d("SendCommand", "Connected to device opened");
-		// beginListenForData();
+		if (findArduino()) {
+			// assign standard id
+			UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+			// start socket connection
+			mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+			mmSocket.connect();
+			mmOutputStream = mmSocket.getOutputStream();
+			mmInputStream = mmSocket.getInputStream();
+			Log.d("SendCommand", "Connected to device opened");
+			// beginListenForData();
+		}
 	}
 
 	public void closeConnection() throws IOException {
