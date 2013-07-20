@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -187,6 +188,7 @@ public class AIDriver extends Fragment {
 		Thread t = new Thread(new Runnable() {
 
 			public void run() {
+				SystemClock.sleep(20000);
 				alignToDest();
 
 				while (!destinationReached()) {

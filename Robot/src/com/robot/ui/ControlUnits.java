@@ -212,8 +212,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onResume();
 		// register the gyro sensor
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-		// TODO remove this
-		buttonsAvailable(View.VISIBLE);
 	}
 
 	@Override
