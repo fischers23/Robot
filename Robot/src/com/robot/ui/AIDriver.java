@@ -119,7 +119,10 @@ public class AIDriver extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.ai_menu, menu);
-
+		// show drive only if a destination is available
+		if (loc != null) {
+			menu.findItem(R.id.atn_start_drive).setVisible(true);
+		}
 	}
 
 	@Override
@@ -129,6 +132,12 @@ public class AIDriver extends Fragment {
 
 			// open the map fragment
 			getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
+
+			return true;
+		case R.id.atn_start_drive:
+
+			// start the ai drive
+			startAIDrive();
 
 			return true;
 		default:
@@ -143,7 +152,6 @@ public class AIDriver extends Fragment {
 			// remove hint
 			getActivity().findViewById(R.id.map_hint).setVisibility(View.GONE);
 			getActivity().findViewById(R.id.compass).setVisibility(View.VISIBLE);
-			getActivity().findViewById(R.id.atn_start_drive).setVisibility(View.VISIBLE);
 
 			drawBearing();
 		}
