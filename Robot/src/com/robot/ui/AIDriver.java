@@ -195,7 +195,7 @@ public class AIDriver extends Fragment {
 						driver.stop();
 						alignToDest();
 					}
-					driver.forward(true);
+					driver.forwardWithSpeed(255);
 				}
 			}
 		});
@@ -223,9 +223,9 @@ public class AIDriver extends Fragment {
 
 		while (Math.abs(deltaAngle()) > 10) {
 			if ((navi.getAzimuth() - bearing) > 0)
-				driver.left(true);
+				driver.leftWithSpeed(255);
 			else
-				driver.right(true);
+				driver.rightWithSpeed(255);
 		}
 		driver.stop();
 	}
