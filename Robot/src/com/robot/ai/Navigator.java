@@ -120,7 +120,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 			SensorManager.getOrientation(matrixR, matrixValues);
 
 			azimuth = (float) Math.round(Math.toDegrees(matrixValues[0]));
-			azimuth -= 90; // correction due to landscape orientation
+			azimuth += 90; // correction due to landscape orientation
 			azimuth = (azimuth + 360) % 360;
 
 			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));
