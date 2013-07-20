@@ -24,6 +24,7 @@ public class AIDriver extends Fragment {
 
 	Navigator navi;
 	CoordinatePicker copi;
+	Location loc = null;
 
 	// the arduino command set
 	ArduinoCommands driver = null;
@@ -73,16 +74,16 @@ public class AIDriver extends Fragment {
 	
 	public void drawBearing(Location dest){
 		
-		double angle = navi.getBearing(dest)+90;
+		float angle = navi.getBearing(dest);
 		drawArrow(angle);
 	}
 	
-	public void drawArrow(Double angle){
+	public void drawArrow(float angle){
 		
 		
 
 		Matrix matrix = new Matrix();
-		matrix.postRotate(Float.valueOf(""+angle), arrow.getWidth()/2, arrow.getHeight()/2);
+		matrix.postRotate(angle, arrow.getWidth()/2, arrow.getHeight()/2);
         
 		
 		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
@@ -99,6 +100,8 @@ public class AIDriver extends Fragment {
 	public void onResume(){
 		super.onResume();
 		navi.init(this);
+		if(loc != null)
+			drawBearing(loc);
 	}
 	
 	public void onPause(){
@@ -109,10 +112,10 @@ public class AIDriver extends Fragment {
 
 	public void setDestinationLocation(LatLng location) {
 		Log.d("CoordinatePicker", location.toString());
-		Location loc = navi.getPosition();
+		loc = navi.getPosition();
 		loc.setLatitude(location.latitude);
 		loc.setLongitude(location.longitude);
-		drawBearing(loc);
+//		drawBearing(loc);
 	}
 	
 }

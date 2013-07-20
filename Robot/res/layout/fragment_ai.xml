@@ -2,54 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <!-- 
-	<TextView android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="35sp"
-	    android:text="Azimuth"
-	    android:textColor="#000000"/>
-	<TextView android:id="@+id/azimuth"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="20sp"
-	    android:textColor="#000000"/>
-	
-	<TextView android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="35sp"
-	    android:text="Pitch"/>
-	<TextView android:id="@+id/pitch"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="20sp"/>
-	<TextView android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="35sp"
-	    android:text="Roll"/>
-	<TextView android:id="@+id/roll"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="20sp"/>
-	     
-	<Button android:id="@+id/refresh"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Refresh"
-	    android:textColor="#000000"/>
--->
+    android:orientation="horizontal" >
 
+    <Space
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
 
-        <ImageView
-            android:id="@+id/compass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/compass"
+        android:layout_width="213dp"
+        android:layout_height="214dp" />
 
-	<Button
-	    android:id="@+id/map_open"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Open Map"
-	    android:textColor="#000000" />
+    <Space
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <Button
+        android:id="@+id/map_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Map"
+        android:textColor="#000000" />
 
 </LinearLayout>
