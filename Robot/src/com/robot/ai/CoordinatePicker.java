@@ -1,5 +1,6 @@
 package com.robot.ai;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -20,32 +21,25 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
+import com.robot.ui.AIDriver;
 
 public class CoordinatePicker extends Fragment {
-	private View v;
-	private MapView m;
-	private GoogleMap map;
-	LatLng ENGLISCHER_GARTEN = new LatLng(48.1298926770173, 11.583151817321777);
+	private View mView;
+	private MapView mMapView;
+	private GoogleMap mMap;
 
-	OnLocationSelectedListener mCallback;
-
-    // Container Activity must implement this interface
-    public interface OnLocationSelectedListener {
-        public void onLocationSelected(LatLng point);
-    }
-    
-    
+  
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		// inflate and return the layout
-		View v = inflater.inflate(R.layout.fragment_map, container, false);
-		m = (MapView) v.findViewById(R.id.mapView);
-		m.onCreate(savedInstanceState);
+		mView = inflater.inflate(R.layout.fragment_map, container, false);
+		mMapView = (MapView) mView.findViewById(R.id.mapView);
+		mMapView.onCreate(savedInstanceState);
 
 		// get the map object
-		map = m.getMap();
-		if (map != null) {
+		mMap = mMapView.getMap();
+		if (mMap != null) {
 			
 			// get current position
 			LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -67,47 +61,58 @@ public class CoordinatePicker extends Fragment {
 
 			// go to current position
 			CameraPosition mCameraPosition = new CameraPosition.Builder().target(location).bearing(0).tilt(30).zoom(15f).build();
-			map.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+			mMap.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
 			
 			// make button to current location available
-			map.setMyLocationEnabled(true);
+			mMap.setMyLocationEnabled(true);
 			
 			// set onclick listener to grab a position
-			map.setOnMapClickListener(new OnMapClickListener() {
+			mMap.setOnMapClickListener(new OnMapClickListener() {
 				@Override
 				public void onMapClick(LatLng point) {
-					// get click point
-					mCallback.onLocationSelected(point);
+					// send point to AI Driver
+					AIDriver fragment = (AIDriver) getFragmentManager().findFragmentByTag("aid");
+					fragment.setDestinationLocation(point);
+
+					// close map
+					closeFragment();
 				}
 			});
 
 		} else
 			Log.e("CoordinatePicker", "map is null");
-		return v;
+		return mView;
 	}
 
+	// go back to previous fragment
+	private void closeFragment() {
+		getActivity().getSupportFragmentManager().popBackStack();
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
-		m.onResume();
+		mMapView.onResume();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		m.onPause();
+		mMapView.onPause();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		m.onDestroy();
+		mMapView.onDestroy();
 	}
 
 	@Override
 	public void onLowMemory() {
 		super.onLowMemory();
-		m.onLowMemory();
+		mMapView.onLowMemory();
 	}
+	
+
 
 }

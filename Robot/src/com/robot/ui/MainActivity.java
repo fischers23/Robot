@@ -75,10 +75,6 @@ public class MainActivity extends FragmentActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	public void setDestinationLocation(LatLng location) {
-		Log.d("CoordinatePicker", location.toString());
-	}
 	
 	@Override
 	public void onPause() {

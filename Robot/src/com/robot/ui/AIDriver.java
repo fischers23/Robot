@@ -18,12 +18,15 @@ import com.robot.ai.CoordinatePicker;
 import com.robot.ai.Navigator;
 import com.robot.connection.ArduinoCommands;
 
-public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSelectedListener {
+public class AIDriver extends Fragment {
 
 	Navigator navi;
+	CoordinatePicker copi;
 
 	// the arduino command set
 	ArduinoCommands driver = null;
+	
+
 	
 	Drawable[] layers;
 
@@ -48,8 +51,8 @@ public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSel
 
 			@Override
 			public void onClick(View v) {
-				// initialize the AI fragment
-				CoordinatePicker copi = new CoordinatePicker();
+				// initialize the Map with the Coordiate Listener
+				copi = new CoordinatePicker();
 
 				// start the map fragment
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
@@ -92,11 +95,8 @@ public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSel
 	}
 
 
-	@Override
-	public void onLocationSelected(LatLng point) {
-		// TODO Auto-generated method stub
-		
+	public void setDestinationLocation(LatLng location) {
+		Log.d("CoordinatePicker", location.toString());
 	}
-
-
+	
 }
