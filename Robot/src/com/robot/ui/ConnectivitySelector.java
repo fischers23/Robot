@@ -5,12 +5,14 @@ import java.io.IOException;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
 import com.robot.connection.CHBluetooth;
@@ -141,6 +143,11 @@ public class ConnectivitySelector extends Fragment {
 			}
 		}
 	}
+	
+	public void setDestinationLocation(LatLng location) {
+		Log.d("CoordinatePicker", location.toString());
+	}
+	
 
 	@Override
 	public void onDestroy() {

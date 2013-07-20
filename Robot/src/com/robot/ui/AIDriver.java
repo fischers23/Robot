@@ -2,18 +2,20 @@ package com.robot.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.ai.CoordinatePicker;
 import com.robot.ai.Navigator;
 import com.robot.connection.ArduinoCommands;
 
-public class AIDriver extends Fragment {
+public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSelectedListener {
 
 	Navigator navi;
 
@@ -45,18 +47,11 @@ public class AIDriver extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// // initialize the AI fragment
+				// initialize the AI fragment
 				CoordinatePicker copi = new CoordinatePicker();
 
+				// start the map fragment
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
-
-				// mContentView.inflate(getActivity(), R.layout.fragment_map,
-				// null);
-
-				// getActivity().setContentView(R.layout.fragment_map);
-				// SupportMapFragment mapFrag = (SupportMapFragment)
-				// getFragmentManager().findFragmentById(R.id.fragment_map);
-				// map = mapFrag.getMap();
 
 			}
 		});
@@ -64,6 +59,9 @@ public class AIDriver extends Fragment {
 		return mContentView;
 	}
 
+
+	
+	
 	public void refresh() {
 		TextView tv = (TextView) mContentView.findViewById(R.id.azimuth);
 		tv.setText("" + navi.getAzimuth());
@@ -85,6 +83,12 @@ public class AIDriver extends Fragment {
 	public void onPause(){
 		super.onPause();
 		navi.stop();
+	}
+
+	@Override
+	public void onLocationSelected(LatLng point) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -27,6 +27,14 @@ public class CoordinatePicker extends Fragment {
 	private GoogleMap map;
 	LatLng ENGLISCHER_GARTEN = new LatLng(48.1298926770173, 11.583151817321777);
 
+	OnLocationSelectedListener mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnLocationSelectedListener {
+        public void onLocationSelected(LatLng point);
+    }
+    
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -69,8 +77,7 @@ public class CoordinatePicker extends Fragment {
 				@Override
 				public void onMapClick(LatLng point) {
 					// get click point
-					Log.d("CoordinatePicker", point.toString());
-
+					mCallback.onLocationSelected(point);
 				}
 			});
 

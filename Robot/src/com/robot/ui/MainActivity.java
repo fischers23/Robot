@@ -3,11 +3,13 @@ package com.robot.ui;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 
 public class MainActivity extends FragmentActivity {
@@ -74,6 +76,10 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
+	public void setDestinationLocation(LatLng location) {
+		Log.d("CoordinatePicker", location.toString());
+	}
+	
 	@Override
 	public void onPause() {
 		super.onPause();
