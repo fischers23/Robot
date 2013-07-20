@@ -119,7 +119,7 @@ public class AIDriver extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.ai_menu, menu);
-		// show drive only if a destination is available
+		// only show drive if a destination is available
 		if (loc != null) {
 			menu.findItem(R.id.atn_start_drive).setVisible(true);
 		}
