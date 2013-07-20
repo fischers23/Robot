@@ -12,11 +12,6 @@
         android:title="@string/gyro"
         android:visible="false"/>
     <item
-        android:id="@+id/atn_scan_for_wd_peers"
-        android:showAsAction="ifRoom|withText"
-        android:title="peer discovery"
-        android:visible="false"/>
-    <item
         android:id="@+id/atn_open_map"
         android:showAsAction="ifRoom|withText"
         android:title="Open Map"

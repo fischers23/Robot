@@ -59,16 +59,16 @@ public class AIDriver extends Fragment {
 		// initialize the Map with the Coordiate Listener
 		copi = new CoordinatePicker();
 
-		// click on the compass to start the autonomous drive
-		ImageView iv = (ImageView) getActivity().findViewById(R.id.compass);
-		iv.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				startAIDrive();
-
-			}
-		});
+//		// click on the compass to start the autonomous drive
+//		ImageView iv = (ImageView) getActivity().findViewById(R.id.compass);
+//		iv.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				startAIDrive();
+//
+//			}
+//		});
 
 		return mContentView;
 	}
