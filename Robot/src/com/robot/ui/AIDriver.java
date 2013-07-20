@@ -40,15 +40,18 @@ public class AIDriver extends Fragment {
 	MenuItem i;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
 		setHasOptionsMenu(true);
 
-		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
-		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
+		arrow = BitmapFactory.decodeResource(getResources(),
+				R.drawable.button_arrow);
+		shadow = BitmapFactory.decodeResource(getResources(),
+				R.drawable.button_shadow);
 
 		navi = new Navigator(getActivity());
 
@@ -104,7 +107,8 @@ public class AIDriver extends Fragment {
 		Matrix matrix = new Matrix();
 		matrix.postRotate(angle, arrow.getWidth() / 2, arrow.getHeight() / 2);
 
-		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
+		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(),
+				arrow.getHeight(), Bitmap.Config.ARGB_8888);
 
 		// Bitmap finished = Bitmap.createBitmap(arrow);
 		Canvas c = new Canvas(finished);
@@ -131,7 +135,9 @@ public class AIDriver extends Fragment {
 		case R.id.atn_open_map:
 
 			// open the map fragment
-			getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
+			getFragmentManager().beginTransaction()
+					.replace(R.id.mainFragment, copi, "copi")
+					.addToBackStack("copi").commit();
 
 			return true;
 		case R.id.atn_start_drive:
@@ -151,7 +157,8 @@ public class AIDriver extends Fragment {
 		if (loc != null) {
 			// remove hint
 			getActivity().findViewById(R.id.map_hint).setVisibility(View.GONE);
-			getActivity().findViewById(R.id.compass).setVisibility(View.VISIBLE);
+			getActivity().findViewById(R.id.compass)
+					.setVisibility(View.VISIBLE);
 
 			drawBearing();
 		}
@@ -177,16 +184,22 @@ public class AIDriver extends Fragment {
 
 	public void startAIDrive() {
 
-		alignToDest();
+		Thread t = new Thread(new Runnable() {
 
-		while (!destinationReached()) {
-
-			if (Math.abs(deltaAngle()) > 10f) {
-				driver.stop();
+			public void run() {
 				alignToDest();
+
+				while (!destinationReached()) {
+
+					if (Math.abs(deltaAngle()) > 10f) {
+						driver.stop();
+						alignToDest();
+					}
+					driver.forward(true);
+				}
 			}
-			driver.forward(true);
-		}
+		});
+		t.start();
 
 	}
 
