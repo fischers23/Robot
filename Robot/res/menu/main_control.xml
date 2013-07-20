@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/atn_connect"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/connect"
-        android:visible="false"/>
+  
     <item
         android:id="@+id/atn_gyro"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/gyro"
-        android:visible="false"/>
-    <item
-        android:id="@+id/atn_open_map"
-        android:showAsAction="ifRoom|withText"
-        android:title="Open Map"
-        android:visible="false">
-    </item>
+        android:title="@string/gyro"/>
 
 </menu>

@@ -3,15 +3,20 @@ package com.robot.ui;
 import java.io.IOException;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.google.android.gms.internal.bt;
 import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
@@ -33,13 +38,23 @@ public class ConnectivitySelector extends Fragment {
 	View mContentView;
 	Context mContext;
 
-	boolean BTconnected;
+	BluetoothBroadcastReceiver bcr = null;
+	private final IntentFilter intentFilter = new IntentFilter();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContentView = inflater.inflate(R.layout.fragment_connectivity_selector, container, false);
 		mContext = getActivity();
+
+		// register BlueTooth intent filter to get nofified as BT is connected
+		// or disconnected
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
+		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+
+		// create the broadcast receiver
+		bcr = new BluetoothBroadcastReceiver(getActivity());
 
 		// This section handles the Bluetooth Button
 		ImageButton connectBTButton = (ImageButton) mContentView.findViewById(R.id.connect_bluetooth);
@@ -49,7 +64,7 @@ public class ConnectivitySelector extends Fragment {
 
 				// initialize the fragment
 				cu = new ControlUnits();
-				
+
 				// if not already done instantiate the BT connection handler
 				if (cHandler == null)
 					cHandler = new CHBluetooth(getActivity(), "Arduino");
@@ -57,6 +72,9 @@ public class ConnectivitySelector extends Fragment {
 				// create the driver class
 				driver = new ArduinoCommands(cHandler);
 				cu.setCommands(driver);
+				
+				// connect BT
+				connectBT(true);
 
 				// open the control screen fragment
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu, "cu").addToBackStack("cu").commit();
@@ -92,6 +110,9 @@ public class ConnectivitySelector extends Fragment {
 				// create the driver class
 				driver = new ArduinoCommands(cHandler);
 				aid.setCommands(driver);
+				
+				// connect BT
+				connectBT(true);
 
 				getFragmentManager().beginTransaction().replace(R.id.mainFragment, aid, "aid").addToBackStack("aid").commit();
 			}
@@ -100,19 +121,11 @@ public class ConnectivitySelector extends Fragment {
 		return mContentView;
 	}
 
-	// proxy for the gyro sensor toggle
-	public void enableGyro() {
-		cu.enableGyro();
-	}
-
 	// here we handle the bluetoot connection
 	// this is called by the menu in the fragment_control_unit
-	public void connectBT(boolean BTconnected) {
-
-		this.BTconnected = BTconnected;
-
-		// toggle connect
-		if (!BTconnected) {
+	public void connectBT(boolean connect) {
+		// connect
+		if (!bcr.isBTconnected() && connect) {
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
 					try {
@@ -124,22 +137,38 @@ public class ConnectivitySelector extends Fragment {
 				}
 			});
 			connectionThread.start();
-			cu.buttonsAvailable(View.VISIBLE);
-		} else {
+		}
+		// disconnect
+		if (!connect) {
 			try {
 				// if we are already connected -> disconnect
 				cHandler.closeConnection();
-				cu.buttonsAvailable(View.INVISIBLE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public void setDestinationLocation(LatLng location) {
 		Log.d("CoordinatePicker", location.toString());
 	}
-	
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		// unregister the intent filters together with the broadcastreceiver
+		getActivity().unregisterReceiver(bcr);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		// register intent filters
+		getActivity().registerReceiver(bcr, intentFilter);
+
+		// close existing BT connections
+		connectBT(false);
+	}
 
 	@Override
 	public void onDestroy() {
@@ -153,7 +182,5 @@ public class ConnectivitySelector extends Fragment {
 			e.printStackTrace();
 		}
 	}
-
-
 
 }

@@ -11,6 +11,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
-		Toast.makeText(getActivity(), "Press connect to start!", Toast.LENGTH_LONG).show();
 
 		// gyro stuff
 		sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -53,6 +53,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
 		sensorLabel = (TextView) mContentView.findViewById(R.id.rotationText);
 
+		
 		// forward/backward driving
 		speed_view = (ImageView) mContentView.findViewById(R.id.my_speed);
 		speed_view.setOnTouchListener(new View.OnTouchListener() {
@@ -148,20 +149,27 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-	}
-
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-
-		// make our menu buttons visible
-		menu.findItem(R.id.atn_connect).setVisible(true);
-		menu.findItem(R.id.atn_gyro).setVisible(true);
+		inflater.inflate(R.menu.main_control, menu);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.atn_gyro:
+			// enable the gyro steering
+			enableGyro();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+
+
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -212,8 +220,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		super.onResume();
 		// register the gyro sensor
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-		// TODO remove this
-		buttonsAvailable(View.VISIBLE);
 	}
 
 	@Override
@@ -232,14 +238,14 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			sensorLabel.setText("on");
 	}
 
-	// toggle the visibility of the steering buttons as
-	// we are connected/disconnected
-	public void buttonsAvailable(int i) {
-		if (i == View.VISIBLE || i == View.INVISIBLE) {
-			getActivity().findViewById(R.id.my_speed).setVisibility(i);
-			getActivity().findViewById(R.id.my_steer).setVisibility(i);
-
-		}
-	}
+//	// toggle the visibility of the steering buttons as
+//	// we are connected/disconnected
+//	public void buttonsAvailable(int i) {
+//		if (i == View.VISIBLE || i == View.INVISIBLE) {
+//			getActivity().findViewById(R.id.my_speed).setVisibility(i);
+//			getActivity().findViewById(R.id.my_steer).setVisibility(i);
+//
+//		}
+//	}
 
 }
