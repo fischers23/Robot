@@ -1,15 +1,18 @@
 package com.robot.ui;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -28,7 +31,9 @@ public class AIDriver extends Fragment {
 	
 
 	
-	Drawable[] layers;
+	Bitmap arrow;
+	Bitmap shadow;
+	Bitmap newBitmap;
 
 	View mContentView;
 
@@ -38,10 +43,9 @@ public class AIDriver extends Fragment {
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
-		Resources r = getResources();
-		layers = new Drawable[2];
-		layers[0] = r.getDrawable(R.drawable.button_arrow);
-		layers[1] = r.getDrawable(R.drawable.button_shadow);
+		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
+		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
+		
 		
 		
 		navi = new Navigator(getActivity());
@@ -64,17 +68,6 @@ public class AIDriver extends Fragment {
 	}
 
 
-	
-	
-	public void refresh() {
-		TextView tv = (TextView) mContentView.findViewById(R.id.azimuth);
-		tv.setText("" + navi.getAzimuth());
-//		tv = (TextView) mContentView.findViewById(R.id.pitch);
-//		tv.setText("" + navi.getPitch());
-//		tv = (TextView) mContentView.findViewById(R.id.roll);
-//		tv.setText("" + navi.getRoll());
-	}
-
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
@@ -82,6 +75,20 @@ public class AIDriver extends Fragment {
 	public void drawArrow(Double angle){
 		
 		
+
+		Matrix matrix = new Matrix();
+		matrix.postRotate(Float.valueOf(""+angle), arrow.getWidth()/2, arrow.getHeight()/2);
+        
+		
+		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
+		
+//		Bitmap finished = Bitmap.createBitmap(arrow);
+		Canvas c = new Canvas(finished);
+		c.drawBitmap(arrow, matrix, null);
+		c.drawBitmap(shadow, new Matrix(), null);
+		
+		ImageView v = (ImageView) getActivity().findViewById(R.id.compass);
+		v.setImageBitmap(finished);
 	}
 	
 	public void onResume(){
