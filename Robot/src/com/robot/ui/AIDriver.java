@@ -1,5 +1,8 @@
 package com.robot.ui;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +24,8 @@ public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSel
 
 	// the arduino command set
 	ArduinoCommands driver = null;
+	
+	Drawable[] layers;
 
 	View mContentView;
 
@@ -30,17 +35,13 @@ public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSel
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
+		Resources r = getResources();
+		layers = new Drawable[2];
+		layers[0] = r.getDrawable(R.drawable.button_arrow);
+		layers[1] = r.getDrawable(R.drawable.button_shadow);
+		
+		
 		navi = new Navigator(getActivity());
-
-		Button btn = (Button) mContentView.findViewById(R.id.refresh);
-		btn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				refresh();
-
-			}
-		});
 
 		Button mapOpen = (Button) mContentView.findViewById(R.id.map_open);
 		mapOpen.setOnClickListener(new View.OnClickListener() {
@@ -65,19 +66,24 @@ public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSel
 	public void refresh() {
 		TextView tv = (TextView) mContentView.findViewById(R.id.azimuth);
 		tv.setText("" + navi.getAzimuth());
-		tv = (TextView) mContentView.findViewById(R.id.pitch);
-		tv.setText("" + navi.getPitch());
-		tv = (TextView) mContentView.findViewById(R.id.roll);
-		tv.setText("" + navi.getRoll());
+//		tv = (TextView) mContentView.findViewById(R.id.pitch);
+//		tv.setText("" + navi.getPitch());
+//		tv = (TextView) mContentView.findViewById(R.id.roll);
+//		tv.setText("" + navi.getRoll());
 	}
 
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
 	
+	public void drawArrow(Double angle){
+		
+		
+	}
+	
 	public void onResume(){
 		super.onResume();
-		navi.init();
+		navi.init(this);
 	}
 	
 	public void onPause(){
@@ -85,10 +91,12 @@ public class AIDriver extends Fragment implements CoordinatePicker.OnLocationSel
 		navi.stop();
 	}
 
+
 	@Override
 	public void onLocationSelected(LatLng point) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
