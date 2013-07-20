@@ -108,6 +108,16 @@ public class ArduinoCommands {
 		send[1] = speed;
 		send();
 	}
+	
+	public void stop(){
+		send[0] = "0";
+		send[1] = "0";
+		send[2] = "0";
+		send[3] = "0";
+		send[4] = "0";
+		send[5] = "0";
+		send();
+	}
 
 	public void send() {
 
