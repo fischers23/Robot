@@ -28,9 +28,7 @@ public class AIDriver extends Fragment {
 
 	// the arduino command set
 	ArduinoCommands driver = null;
-	
 
-	
 	Bitmap arrow;
 	Bitmap shadow;
 	Bitmap newBitmap;
@@ -38,16 +36,17 @@ public class AIDriver extends Fragment {
 	View mContentView;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
-		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
-		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
-		
-		
-		
+		arrow = BitmapFactory.decodeResource(getResources(),
+				R.drawable.button_arrow);
+		shadow = BitmapFactory.decodeResource(getResources(),
+				R.drawable.button_shadow);
+
 		navi = new Navigator(getActivity());
 
 		Button mapOpen = (Button) mContentView.findViewById(R.id.map_open);
@@ -59,7 +58,9 @@ public class AIDriver extends Fragment {
 				copi = new CoordinatePicker();
 
 				// start the map fragment
-				getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
+				getFragmentManager().beginTransaction()
+						.replace(R.id.mainFragment, copi, "copi")
+						.addToBackStack("copi").commit();
 
 			}
 		});
@@ -67,55 +68,70 @@ public class AIDriver extends Fragment {
 		return mContentView;
 	}
 
-
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
-	
-	public void drawBearing(Location dest){
-		
-		float angle = navi.getBearing(dest);
-		drawArrow(angle);
+
+	/**
+	 * Draws an arrow pointing towards the destination if such a location is
+	 * already set.
+	 */
+	public void drawBearing() {
+
+		if (loc != null) {
+			float angle = navi.getBearing(loc);
+			drawArrow(angle);
+		}
+
 	}
+
 	
-	public void drawArrow(float angle){
-		
-		
+	/**
+	 * This function draws the arrow that points towards the destination.
+	 * The resulting image is composed of two single images.
+	 * 
+	 * @param angle angle to rotate the arrow image
+	 */
+	public void drawArrow(float angle) {
 
 		Matrix matrix = new Matrix();
-		matrix.postRotate(angle, arrow.getWidth()/2, arrow.getHeight()/2);
-        
-		
-		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
-		
-//		Bitmap finished = Bitmap.createBitmap(arrow);
+		matrix.postRotate(angle, arrow.getWidth() / 2, arrow.getHeight() / 2);
+
+		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(),
+				arrow.getHeight(), Bitmap.Config.ARGB_8888);
+
+		// Bitmap finished = Bitmap.createBitmap(arrow);
 		Canvas c = new Canvas(finished);
 		c.drawBitmap(arrow, matrix, null);
 		c.drawBitmap(shadow, new Matrix(), null);
-		
+
 		ImageView v = (ImageView) getActivity().findViewById(R.id.compass);
 		v.setImageBitmap(finished);
 	}
-	
-	public void onResume(){
+
+	public void onResume() {
 		super.onResume();
 		navi.init(this);
-		if(loc != null)
-			drawBearing(loc);
+		if (loc != null)
+			drawBearing();
 	}
-	
-	public void onPause(){
+
+	public void onPause() {
 		super.onPause();
 		navi.stop();
 	}
 
-
+	
+	/**
+	 * Called from the map view to get the position of the desired destination
+	 *  
+	 * @param location Latitude and Longitude of selected location
+	 */
 	public void setDestinationLocation(LatLng location) {
 		Log.d("CoordinatePicker", location.toString());
 		loc = navi.getPosition();
 		loc.setLatitude(location.latitude);
 		loc.setLongitude(location.longitude);
-//		drawBearing(loc);
 	}
-	
+
 }
