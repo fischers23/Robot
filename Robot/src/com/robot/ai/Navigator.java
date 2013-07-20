@@ -115,7 +115,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 			if(frag != null){
 //				TextView t = (TextView) frag.getActivity().findViewById(R.id.azimuth);
 //				t.setText(""+azimuth);
-				((AIDriver) frag).drawArrow(azimuth);
+//				((AIDriver) frag).drawArrow(azimuth);
 			}
 
 			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));

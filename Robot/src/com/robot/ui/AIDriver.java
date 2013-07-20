@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -70,6 +71,12 @@ public class AIDriver extends Fragment {
 		driver = ac;
 	}
 	
+	public void drawBearing(Location dest){
+		
+		double angle = navi.getBearing(dest)+90;
+		drawArrow(angle);
+	}
+	
 	public void drawArrow(Double angle){
 		
 		
@@ -102,6 +109,10 @@ public class AIDriver extends Fragment {
 
 	public void setDestinationLocation(LatLng location) {
 		Log.d("CoordinatePicker", location.toString());
+		Location loc = navi.getPosition();
+		loc.setLatitude(location.latitude);
+		loc.setLongitude(location.longitude);
+		drawBearing(loc);
 	}
 	
 }
