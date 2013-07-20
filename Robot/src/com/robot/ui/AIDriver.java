@@ -188,6 +188,7 @@ public class AIDriver extends Fragment {
 		Thread t = new Thread(new Runnable() {
 
 			public void run() {
+				SystemClock.sleep(20000);
 				alignToDest();
 
 				while (!destinationReached()) {
