@@ -11,10 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.widget.TextView;
 
-import com.robot.R;
 import com.robot.ui.AIDriver;
 
 public class Navigator implements SensorEventListener, LocationListener {
@@ -31,11 +28,9 @@ public class Navigator implements SensorEventListener, LocationListener {
 	private float[] matrixR;
 	private float[] matrixI;
 	private float[] matrixValues;
-	
-	private double azimuth;
-	private double pitch;
-	private double roll;
-	
+
+	private float azimuth;
+
 	private Fragment frag;
 
 	public Navigator(Activity act) {
@@ -45,24 +40,34 @@ public class Navigator implements SensorEventListener, LocationListener {
 
 	}
 
+	/**
+	 * 
+	 * This function initializes the sensor and location managers and requests
+	 * updates from these services.
+	 * 
+	 * @param f
+	 *            handle to calling fragment
+	 */
 	public void init(Fragment f) {
-		
+
 		frag = f;
-		//initialize the managers an request updates
+		// initialize the managers an request updates
 		sensorManager = (SensorManager) mActivity
 				.getSystemService(Context.SENSOR_SERVICE);
 		sensorAccelerometer = sensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sensorMagneticField = sensorManager
 				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-		
+
 		sensorManager.registerListener(this, sensorAccelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
+				SensorManager.SENSOR_DELAY_GAME);
 		sensorManager.registerListener(this, sensorMagneticField,
-				SensorManager.SENSOR_DELAY_NORMAL);
-		
-		locationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+				SensorManager.SENSOR_DELAY_GAME);
+
+		locationManager = (LocationManager) mActivity
+				.getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, this);
 
 		valuesAccelerometer = new float[3];
 		valuesMagneticField = new float[3];
@@ -71,8 +76,11 @@ public class Navigator implements SensorEventListener, LocationListener {
 		matrixValues = new float[3];
 	}
 
+	/**
+	 * Call this function to unregister all listeners to prefent errors
+	 */
 	public void stop() {
-		//unregister the listeners
+		// unregister the listeners
 		sensorManager.unregisterListener(this, sensorAccelerometer);
 		sensorManager.unregisterListener(this, sensorMagneticField);
 		locationManager.removeUpdates(this);
@@ -85,20 +93,20 @@ public class Navigator implements SensorEventListener, LocationListener {
 
 	}
 
+	/**
+	 * This callback function is used to determine the azimuth of the phone. The
+	 * azimuth is the rotation regarding the z-axis.
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		
-		//calculates the current azimuth, pitch and roll
+
+		// calculates the current azimuth, pitch and roll
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_ACCELEROMETER:
-			for (int i = 0; i < 3; i++) {
-				valuesAccelerometer[i] = event.values[i];
-			}
+			valuesAccelerometer = event.values.clone();
 			break;
 		case Sensor.TYPE_MAGNETIC_FIELD:
-			for (int i = 0; i < 3; i++) {
-				valuesMagneticField[i] = event.values[i];
-			}
+			valuesMagneticField = event.values.clone();
 			break;
 		}
 
@@ -106,17 +114,14 @@ public class Navigator implements SensorEventListener, LocationListener {
 				valuesAccelerometer, valuesMagneticField);
 
 		if (success) {
+			float[] remappedR = new float[9];
+			SensorManager.remapCoordinateSystem(matrixR, SensorManager.AXIS_X,
+					SensorManager.AXIS_Z, remappedR);
 			SensorManager.getOrientation(matrixR, matrixValues);
 
-			azimuth = Math.toDegrees(matrixValues[0]);
-			pitch = Math.toDegrees(matrixValues[1]);
-			roll = Math.toDegrees(matrixValues[2]);
-			
-			if(frag != null){
-//				TextView t = (TextView) frag.getActivity().findViewById(R.id.azimuth);
-//				t.setText(""+azimuth);
-//				((AIDriver) frag).drawArrow(azimuth);
-			}
+			azimuth = (float) Math.round(Math.toDegrees(matrixValues[0]));
+			azimuth += 90; // correction due to landscape orientation
+			azimuth = (azimuth + 360) % 360;
 
 			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));
 			// readingPitch.setText("Pitch: " + String.valueOf(pitch));
@@ -124,51 +129,64 @@ public class Navigator implements SensorEventListener, LocationListener {
 		}
 	}
 
+	/**
+	 * This function determines the last know position and returns it in a
+	 * Location object
+	 * 
+	 * @return current Location
+	 */
 	public Location getPosition() {
 
-		return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		return locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	}
 
+	/**
+	 * 
+	 * This function determines the angle between the true north and the desired
+	 * destination
+	 * 
+	 * @param dest
+	 *            destination position
+	 * @return the angle to destination
+	 */
 	public float getBearing(Location dest) {
-		
+
 		Location currentPos = getPosition();
 		return currentPos.bearingTo(dest);
 	}
-	
-	public double getAzimuth(){
+
+	public float getAzimuth() {
 		return azimuth;
 	}
-	
-	public double getPitch(){
-		return pitch;
-	}
-	
-	public double getRoll(){
-		return roll;
-	}
 
+	/**
+	 * This callback method updates the bearing to the destination an causes the
+	 * arrow to redraw (if an destination is set)
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-		
+
+		if (frag != null)
+			((AIDriver) frag).drawBearing();
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
