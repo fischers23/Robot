@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.google.android.gms.internal.dr;
 import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.ai.CoordinatePicker;
@@ -85,7 +84,10 @@ public class AIDriver extends Fragment {
 
 		if (loc != null) {
 			bearing = navi.getBearing(loc);
-			drawArrow(bearing);
+			//bearing is the angle on a north faced map
+			//adjust the angle regarding the direction in which we look
+			float az = navi.getAzimuth();
+			drawArrow(Math.abs(bearing - az));
 
 		}
 
@@ -184,6 +186,10 @@ public class AIDriver extends Fragment {
 		
 	}
 	
+	/**
+	 * 
+	 * @return boolean
+	 */
 	private boolean destinationReached(){
 		
 		if(navi.getPosition().distanceTo(loc) <= 5){
