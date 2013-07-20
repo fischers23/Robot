@@ -29,7 +29,6 @@ public class AIDriver extends Fragment {
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
 		navi = new Navigator(getActivity());
-		navi.init();
 
 		Button btn = (Button) mContentView.findViewById(R.id.refresh);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +75,16 @@ public class AIDriver extends Fragment {
 
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
+	}
+	
+	public void onResume(){
+		super.onResume();
+		navi.init();
+	}
+	
+	public void onPause(){
+		super.onPause();
+		navi.stop();
 	}
 
 }
