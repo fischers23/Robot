@@ -196,7 +196,41 @@ public class AIDriver extends Fragment {
 						alignToDest();
 					}
 					driver.forwardWithSpeed(255);
+					try {
+						this.wait(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+			}
+			private boolean destinationReached() {
+
+				if (navi.getPosition().distanceTo(loc) <= 5) {
+					return true;
+				}
+				return false;
+			}
+
+			private float deltaAngle() {
+				return navi.getAzimuth() - bearing;
+			}
+
+			private void alignToDest() {
+
+				while (Math.abs(deltaAngle()) > 10) {
+					if ((navi.getAzimuth() - bearing) > 0)
+						driver.leftWithSpeed(255);
+					else
+						driver.rightWithSpeed(255);
+					try {
+						this.wait(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				driver.stop();
 			}
 		});
 		t.start();
@@ -207,27 +241,6 @@ public class AIDriver extends Fragment {
 	 * 
 	 * @return boolean
 	 */
-	private boolean destinationReached() {
-
-		if (navi.getPosition().distanceTo(loc) <= 5) {
-			return true;
-		}
-		return false;
-	}
-
-	private float deltaAngle() {
-		return navi.getAzimuth() - bearing;
-	}
-
-	private void alignToDest() {
-
-		while (Math.abs(deltaAngle()) > 10) {
-			if ((navi.getAzimuth() - bearing) > 0)
-				driver.leftWithSpeed(255);
-			else
-				driver.rightWithSpeed(255);
-		}
-		driver.stop();
-	}
+	
 
 }
