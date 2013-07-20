@@ -68,7 +68,6 @@ public class MainActivity extends FragmentActivity {
 			return true;
 		case R.id.atn_gyro:
 			// enable the gyro steering
-			// TODO: set this value somewhere
 			consel.enableGyro();
 			return true;
 		default:

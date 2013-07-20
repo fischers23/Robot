@@ -16,5 +16,11 @@
         android:showAsAction="ifRoom|withText"
         android:title="peer discovery"
         android:visible="false"/>
+    <item
+        android:id="@+id/atn_open_map"
+        android:showAsAction="ifRoom|withText"
+        android:title="Open Map"
+        android:visible="false">
+    </item>
 
 </menu>

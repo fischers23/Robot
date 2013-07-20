@@ -14,5 +14,6 @@
     <string name="Deactivated">deactivated</string>
     <string name="connect">connect</string>
     <string name="gyro">gyro</string>
+    <string name="map_start">select &quot;OPEN MAP&quot; from the menu and start by picking a destination</string>
 
 </resources>
