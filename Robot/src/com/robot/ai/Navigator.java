@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.robot.R;
+import com.robot.ui.AIDriver;
 
 public class Navigator implements SensorEventListener, LocationListener {
 
@@ -112,8 +113,9 @@ public class Navigator implements SensorEventListener, LocationListener {
 			roll = Math.toDegrees(matrixValues[2]);
 			
 			if(frag != null){
-				TextView t = (TextView) frag.getActivity().findViewById(R.id.azimuth);
-				t.setText(""+azimuth);
+//				TextView t = (TextView) frag.getActivity().findViewById(R.id.azimuth);
+//				t.setText(""+azimuth);
+				((AIDriver) frag).drawArrow(azimuth);
 			}
 
 			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));
