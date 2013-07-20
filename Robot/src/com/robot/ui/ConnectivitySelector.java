@@ -41,14 +41,6 @@ public class ConnectivitySelector extends Fragment {
 		mContentView = inflater.inflate(R.layout.fragment_connectivity_selector, container, false);
 		mContext = getActivity();
 
-		// make sure there is no pending connection
-		// if (cHandler != null && !BTconnected)
-		// try {
-		// cHandler.closeConnection();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-
 		// This section handles the Bluetooth Button
 		ImageButton connectBTButton = (ImageButton) mContentView.findViewById(R.id.connect_bluetooth);
 		connectBTButton.setOnClickListener(new OnClickListener() {
@@ -162,8 +154,6 @@ public class ConnectivitySelector extends Fragment {
 		}
 	}
 
-	public void searchForPeers() {
-		pl.discoverPeers();
-	}
+
 
 }
