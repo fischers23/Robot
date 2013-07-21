@@ -30,6 +30,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 	private float[] matrixValues;
 
 	private float azimuth;
+	private float lastAzi = 0;
 
 	private Fragment frag;
 
@@ -122,7 +123,11 @@ public class Navigator implements SensorEventListener, LocationListener {
 			azimuth = (float) Math.round(Math.toDegrees(matrixValues[0]));
 			azimuth += 90; // correction due to landscape orientation
 			azimuth = (azimuth + 360) % 360;
-
+			
+			if (Math.abs(lastAzi - azimuth) > 10 && frag != null){
+				lastAzi = azimuth;
+				((AIDriver) frag).drawBearing();
+			}
 			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));
 			// readingPitch.setText("Pitch: " + String.valueOf(pitch));
 			// readingRoll.setText("Roll: " + String.valueOf(roll));
@@ -167,8 +172,8 @@ public class Navigator implements SensorEventListener, LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 
-		if (frag != null)
-			((AIDriver) frag).drawBearing();
+//		if (frag != null)
+//			((AIDriver) frag).drawBearing();
 	}
 
 	@Override

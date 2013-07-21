@@ -109,9 +109,37 @@ public class ArduinoCommands {
 		send();
 	}
 	
+	public void leftWithServo(int i){
+		
+		send[2] = "1"; // forward
+		send[4] = "1"; // left
+		send[5] = "0"; // not right
+		String speed = Integer.toString(i);
+		while (speed.length() < 3) {
+			speed = "0" + speed;
+		}
+		send[1] = "255";
+		send[0] = speed;
+		send();
+	}
+	
+public void rightWithServo(int i){
+		
+		send[2] = "1"; // forward
+		send[4] = "0"; // not left
+		send[5] = "1"; // right
+		String speed = Integer.toString(i);
+		while (speed.length() < 3) {
+			speed = "0" + speed;
+		}
+		send[1] = "255";
+		send[0] = speed;
+		send();
+	}
+	
 	public void stop(){
-		send[0] = "0";
-		send[1] = "0";
+		send[0] = "000";
+		send[1] = "000";
 		send[2] = "0";
 		send[3] = "0";
 		send[4] = "0";

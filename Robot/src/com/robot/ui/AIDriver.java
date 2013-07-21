@@ -40,6 +40,8 @@ public class AIDriver extends Fragment {
 	View mContentView;
 	MenuItem i;
 
+	boolean fragActive;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -138,6 +140,7 @@ public class AIDriver extends Fragment {
 	public void onResume() {
 		super.onResume();
 		navi.init(this);
+		fragActive = true;
 		if (loc != null) {
 			// remove hint
 			getActivity().findViewById(R.id.map_hint).setVisibility(View.GONE);
@@ -150,6 +153,8 @@ public class AIDriver extends Fragment {
 	public void onPause() {
 		super.onPause();
 		navi.stop();
+		driver.stop();
+		fragActive = false;
 	}
 
 	/**
@@ -165,29 +170,44 @@ public class AIDriver extends Fragment {
 		loc.setLongitude(location.longitude);
 	}
 
+	
+	/**
+	 * 
+	 */
 	public void startAIDrive() {
 
 		Thread t = new Thread(new Runnable() {
 
 			public void run() {
-				SystemClock.sleep(20000);
-				Log.d("AIDriver", "Waited 20secs");
-				alignToDest();
+				while (fragActive) {
+					// wait 20sec to mount phone to car
+					SystemClock.sleep(20000);
+					Log.d("AIDriver", "Waited 20secs");
+					
+					// begin AI drive by turning towards the destination
+					alignToDest();
 
-				while (!destinationReached()) {
+					// as long as the destination is not reached and the fragment is active drive to destination
+					while (!destinationReached() && fragActive) {
 
-					if (Math.abs(deltaAngle()) > 10f) {
-						driver.stop();
-						alignToDest();
+						// if the destination is to much aside adjust direction
+						if (Math.abs(deltaAngle()) > 30) {
+							driver.stop();
+							alignToDest();
+						}
+						Log.d("AIDriver", "Destination ho!");
+						driver.forwardWithSpeed(255);
+						SystemClock.sleep(1000);
 					}
-					Log.d("AIDriver", "Destination ho!");
-					driver.forwardWithSpeed(255);
-					SystemClock.sleep(1000);
+					
+					// destination reached -> stop the car
+					driver.stop();
 				}
 			}
 
 			private boolean destinationReached() {
-
+				
+				// check if destination is in reach (5m)
 				if (navi.getPosition().distanceTo(loc) <= 5) {
 					Log.d("AIDriver", "DESTINATION REACHED!");
 					return true;
@@ -202,13 +222,19 @@ public class AIDriver extends Fragment {
 			}
 
 			private void alignToDest() {
-				
+
 				Log.d("AIDriver", "Aligning to destination");
-				while (Math.abs(deltaAngle()) > 10) {
-					if ((navi.getAzimuth() - bearing) > 0)
-						driver.leftWithSpeed(255);
+				while (Math.abs(deltaAngle()) > 30 && fragActive) {
+					float az = navi.getAzimuth();
+					float angle;
+					if (az < bearing)
+						angle = (Math.abs(bearing - az));
 					else
-						driver.rightWithSpeed(255);
+						angle = (360 - Math.abs(bearing - az));
+					if (angle <= 180)
+						driver.leftWithServo(255);
+					else
+						driver.rightWithServo(255);
 					SystemClock.sleep(1000);
 				}
 				driver.stop();
