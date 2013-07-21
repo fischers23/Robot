@@ -17,6 +17,10 @@ public class CHWifiDirect implements ConnectionHandlerInterface {
 		info = inf;
 	}
 
+	/**
+	 * Creates an intent service that contains the message and die information
+	 * of the file server
+	 */
 	@Override
 	public void sendData(String s) {
 
@@ -26,7 +30,8 @@ public class CHWifiDirect implements ConnectionHandlerInterface {
 		Intent serviceIntent = new Intent(act, TransferService.class);
 		serviceIntent.setAction(TransferService.ACTION_SEND_FILE);
 		serviceIntent.putExtra(TransferService.EXTRAS_SEND_TEXT, s);
-		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_ADDRESS, info.groupOwnerAddress.getHostAddress());
+		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_ADDRESS,
+				info.groupOwnerAddress.getHostAddress());
 		serviceIntent.putExtra(TransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
 		act.startService(serviceIntent);
 
@@ -34,13 +39,13 @@ public class CHWifiDirect implements ConnectionHandlerInterface {
 
 	@Override
 	public void closeConnection() throws IOException {
-		// TODO Auto-generated method stub
+		// handling for disconnect in PeerDetail
 
 	}
 
 	@Override
 	public void establishConnection() throws IOException {
-		// TODO Auto-generated method stub
+		// handling for connection establishment in PeerDetail
 
 	}
 

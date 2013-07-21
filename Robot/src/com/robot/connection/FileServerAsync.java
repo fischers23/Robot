@@ -10,6 +10,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.EditText;
 
+/**
+ * This class opens a single socket server that relays everything that is sent
+ * to it over wifi to the attached buetooth device
+ * 
+ */
 public class FileServerAsync extends AsyncTask<Void, Void, String> {
 
 	EditText msg;
@@ -25,7 +30,6 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 			try {
 				cHandler.establishConnection();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -38,21 +42,24 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 
 		try {
 
+			// listen as long as we explicitly want to stop
 			while (listen) {
+				// open server socket and bind it to port 8988
 				ServerSocket serverSocket = new ServerSocket(8988);
 				Log.d("FileServer", "Server: Socket opened");
+				// wait for connection
 				Socket client = serverSocket.accept();
 				Log.d("FileServer", "Server: connection done");
-
+				// read string von input stream
 				InputStream inputstream = client.getInputStream();
-				java.util.Scanner s = new java.util.Scanner(inputstream).useDelimiter("\\A");
+				java.util.Scanner s = new java.util.Scanner(inputstream)
+						.useDelimiter("\\A");
 				String text = s.hasNext() ? s.next() : "";
 				serverSocket.close();
 				if (text != "") {
 					Log.d("FileServer", text);
-					// msg = (EditText)act.findViewById(R.id.sendTxt);
-					// msg.setText(text);
-					// TODO: ArduinoCommands passthrough
+					// relay the received strings to the connected bluetooth
+					// device
 					cHandler.sendData(text);
 				}
 
@@ -66,6 +73,8 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 
 	public void stop() {
 		try {
+			// close bluetooth connection and set flag to stop listening to wifi
+			// connections
 			cHandler.closeConnection();
 			listen = false;
 		} catch (IOException e) {

@@ -43,15 +43,18 @@ public class AIDriver extends Fragment {
 	boolean fragActive;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
 		setHasOptionsMenu(true);
 
-		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
-		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
+		arrow = BitmapFactory.decodeResource(getResources(),
+				R.drawable.button_arrow);
+		shadow = BitmapFactory.decodeResource(getResources(),
+				R.drawable.button_shadow);
 
 		navi = new Navigator(getActivity());
 
@@ -61,6 +64,12 @@ public class AIDriver extends Fragment {
 		return mContentView;
 	}
 
+	/**
+	 * possibility to set to control instance this way the Control unit can be
+	 * kept independent of the underlying implementation (wifi/bluetooth)
+	 * 
+	 * @param ac
+	 */
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
@@ -93,12 +102,15 @@ public class AIDriver extends Fragment {
 	 */
 	public void drawArrow(float angle) {
 
+		// Make rotation matrix
 		Matrix matrix = new Matrix();
 		matrix.postRotate(angle, arrow.getWidth() / 2, arrow.getHeight() / 2);
 
-		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
+		// create a new empty image
+		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(),
+				arrow.getHeight(), Bitmap.Config.ARGB_8888);
 
-		// Bitmap finished = Bitmap.createBitmap(arrow);
+		// draw the rotated image and the shadow above
 		Canvas c = new Canvas(finished);
 		c.drawBitmap(arrow, matrix, null);
 		c.drawBitmap(shadow, new Matrix(), null);
@@ -123,7 +135,9 @@ public class AIDriver extends Fragment {
 		case R.id.atn_open_map:
 
 			// open the map fragment
-			getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
+			getFragmentManager().beginTransaction()
+					.replace(R.id.mainFragment, copi, "copi")
+					.addToBackStack("copi").commit();
 
 			return true;
 		case R.id.atn_start_drive:
@@ -144,7 +158,8 @@ public class AIDriver extends Fragment {
 		if (loc != null) {
 			// remove hint
 			getActivity().findViewById(R.id.map_hint).setVisibility(View.GONE);
-			getActivity().findViewById(R.id.compass).setVisibility(View.VISIBLE);
+			getActivity().findViewById(R.id.compass)
+					.setVisibility(View.VISIBLE);
 
 			drawBearing();
 		}
@@ -170,9 +185,9 @@ public class AIDriver extends Fragment {
 		loc.setLongitude(location.longitude);
 	}
 
-	
 	/**
-	 * 
+	 * Brain of our car. This method tracks the position and orientation of the
+	 * car and computes the drive commands to go towards the destination
 	 */
 	public void startAIDrive() {
 
@@ -183,11 +198,12 @@ public class AIDriver extends Fragment {
 					// wait 20sec to mount phone to car
 					SystemClock.sleep(20000);
 					Log.d("AIDriver", "Waited 20secs");
-					
+
 					// begin AI drive by turning towards the destination
 					alignToDest();
 
-					// as long as the destination is not reached and the fragment is active drive to destination
+					// as long as the destination is not reached and the
+					// fragment is active drive to destination
 					while (!destinationReached() && fragActive) {
 
 						// if the destination is to much aside adjust direction
@@ -199,14 +215,14 @@ public class AIDriver extends Fragment {
 						driver.forwardWithSpeed(255);
 						SystemClock.sleep(1000);
 					}
-					
+
 					// destination reached -> stop the car
 					driver.stop();
 				}
 			}
 
 			private boolean destinationReached() {
-				
+
 				// check if destination is in reach (5m)
 				if (navi.getPosition().distanceTo(loc) <= 5) {
 					Log.d("AIDriver", "DESTINATION REACHED!");
