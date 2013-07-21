@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
+import com.robot.connection.BluetoothBroadcastReceiver;
 import com.robot.connection.CHBluetooth;
 import com.robot.connection.ConnectionHandlerInterface;
 

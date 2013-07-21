@@ -1,4 +1,4 @@
-package com.robot.ui;
+package com.robot.connection;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
