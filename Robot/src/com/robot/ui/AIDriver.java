@@ -171,6 +171,7 @@ public class AIDriver extends Fragment {
 
 			public void run() {
 				SystemClock.sleep(20000);
+				Log.d("AIDriver", "Waited 20secs");
 				alignToDest();
 
 				while (!destinationReached()) {
@@ -179,6 +180,7 @@ public class AIDriver extends Fragment {
 						driver.stop();
 						alignToDest();
 					}
+					Log.d("AIDriver", "Destination ho!");
 					driver.forwardWithSpeed(255);
 					SystemClock.sleep(1000);
 				}
@@ -187,17 +189,21 @@ public class AIDriver extends Fragment {
 			private boolean destinationReached() {
 
 				if (navi.getPosition().distanceTo(loc) <= 5) {
+					Log.d("AIDriver", "DESTINATION REACHED!");
 					return true;
 				}
 				return false;
 			}
 
 			private float deltaAngle() {
-				return navi.getAzimuth() - bearing;
+				float delta = navi.getAzimuth() - bearing;
+				Log.d("AIDriver", "Delta: " + delta);
+				return delta;
 			}
 
 			private void alignToDest() {
-
+				
+				Log.d("AIDriver", "Aligning to destination");
 				while (Math.abs(deltaAngle()) > 10) {
 					if ((navi.getAzimuth() - bearing) > 0)
 						driver.leftWithSpeed(255);
