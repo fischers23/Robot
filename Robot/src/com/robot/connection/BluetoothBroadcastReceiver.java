@@ -1,19 +1,21 @@
 package com.robot.connection;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * This boradcastreceiver is used to get informed about bluetooth events. It
+ * especially filters messages that indicate a connected or disconnected
+ * bluetooth device.
+ * 
+ */
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
-
-	Activity mActivity;
 
 	private boolean btConnected = false;
 
-	public BluetoothBroadcastReceiver(Activity activity) {
-		mActivity = activity;
+	public BluetoothBroadcastReceiver() {
 	}
 
 	@Override

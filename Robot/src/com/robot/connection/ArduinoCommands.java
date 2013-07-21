@@ -2,15 +2,29 @@ package com.robot.connection;
 
 import android.util.Log;
 
+/*
+ * Handler that offers simple commands and translates them to a bitstring that is 
+ * readable by the arduino devices.
+ * The class is as modular as possible to support different types of vehicles.
+ */
 public class ArduinoCommands {
 
-	ConnectionHandlerInterface sc;
+	// handler for the commands on different hardware (wifi/bt)
+	ConnectionHandlerInterface cHandler;
+
+	// initialize the send string
 	String[] send = new String[] { "000", "000", "0", "0", "0", "0" };
 
 	public ArduinoCommands(ConnectionHandlerInterface cHandler) {
-		this.sc = cHandler;
+		this.cHandler = cHandler;
 	}
 
+	/**
+	 * Set a specific speed for driving.
+	 * 
+	 * @param i
+	 *            the speed
+	 */
 	public void driveSpeed(int i) {
 		if (i >= 0 && i <= 255) {
 			String speed = Integer.toString(i);
@@ -22,6 +36,12 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Set a specific speed or angle for steering.
+	 * 
+	 * @param i
+	 *            the speed/angle
+	 */
 	public void steerSpeed(int i) {
 		if (i >= 0 && i <= 255) {
 			String speed = Integer.toString(i);
@@ -33,6 +53,11 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Set/Unset the forward bit true is set false is not set.
+	 * 
+	 * @param state
+	 */
 	public void forward(boolean state) {
 		if (state == true)
 			send[2] = "1";
@@ -41,6 +66,11 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Set/Unset the backward bit true is set false is not set.
+	 * 
+	 * @param state
+	 */
 	public void backward(boolean state) {
 		if (state == true)
 			send[3] = "1";
@@ -49,6 +79,11 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Set/Unset the left bit true is set false is not set.
+	 * 
+	 * @param state
+	 */
 	public void left(boolean state) {
 		if (state == true)
 			send[4] = "1";
@@ -57,6 +92,11 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Set/Unset the right bit true is set false is not set.
+	 * 
+	 * @param state
+	 */
 	public void right(boolean state) {
 		if (state == true)
 			send[5] = "1";
@@ -65,6 +105,12 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Drive forward and simultaneously do unset the backward bit.
+	 * 
+	 * @param i
+	 *            the driving speed
+	 */
 	public void forwardWithSpeed(int i) {
 		send[2] = "1"; // forward
 		send[3] = "0"; // not backward
@@ -76,6 +122,12 @@ public class ArduinoCommands {
 		send();
 	}
 
+	/**
+	 * Drive backward and simultaneously do unset the forward bit.
+	 * 
+	 * @param i
+	 *            the driving speed
+	 */
 	public void backwardWithSpeed(int i) {
 		send[2] = "0"; // not forward
 		send[3] = "1"; // backward
@@ -86,7 +138,14 @@ public class ArduinoCommands {
 		send[0] = speed;
 		send();
 	}
-	
+
+	/**
+	 * Drive left and simultaneously do unset the right bit. This is only
+	 * applicable for vehicles that are able to rotate on the spot
+	 * 
+	 * @param i
+	 *            the rotate speed
+	 */
 	public void leftWithSpeed(int i) {
 		send[4] = "1"; // left
 		send[5] = "0"; // not right
@@ -97,7 +156,14 @@ public class ArduinoCommands {
 		send[1] = speed;
 		send();
 	}
-	
+
+	/**
+	 * Drive right and simultaneously do unset the left bit. This is only
+	 * applicable for vehicles that are able to rotate on the spot.
+	 * 
+	 * @param i
+	 *            the rotate speed
+	 */
 	public void rightWithSpeed(int i) {
 		send[4] = "0"; // not left
 		send[5] = "1"; // right
@@ -108,9 +174,17 @@ public class ArduinoCommands {
 		send[1] = speed;
 		send();
 	}
-	
-	public void leftWithServo(int i){
-		
+
+	/**
+	 * Drive left and simultaneously do unset the right bit and additionally
+	 * drive forward. This is only applicable for vehicles that are equipped
+	 * with a servo motor.
+	 * 
+	 * @param i
+	 *            the drive speed
+	 */
+	public void leftWithServo(int i) {
+
 		send[2] = "1"; // forward
 		send[4] = "1"; // left
 		send[5] = "0"; // not right
@@ -122,9 +196,17 @@ public class ArduinoCommands {
 		send[0] = speed;
 		send();
 	}
-	
-public void rightWithServo(int i){
-		
+
+	/**
+	 * Drive right and simultaneously do unset the left bit and additionally
+	 * drive forward. This is only applicable for vehicles that are equipped
+	 * with a servo motor.
+	 * 
+	 * @param i
+	 *            the drive speed
+	 */
+	public void rightWithServo(int i) {
+
 		send[2] = "1"; // forward
 		send[4] = "0"; // not left
 		send[5] = "1"; // right
@@ -136,8 +218,11 @@ public void rightWithServo(int i){
 		send[0] = speed;
 		send();
 	}
-	
-	public void stop(){
+
+	/**
+	 * Set stop on all channels
+	 */
+	public void stop() {
 		send[0] = "000";
 		send[1] = "000";
 		send[2] = "0";
@@ -147,10 +232,13 @@ public void rightWithServo(int i){
 		send();
 	}
 
+	/**
+	 * Send the bit string
+	 */
 	public void send() {
-
-		sc.sendData(send[0] + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
-		Log.d("ArduinoCommand", "" + send[0] + send[1] + send[2] + send[3] + send[4] + send[5]);
+		cHandler.sendData(send[0] + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
+		// Log.d("ArduinoCommand", "" + send[0] + send[1] + send[2] + send[3] +
+		// send[4] + send[5]);
 	}
 
 }

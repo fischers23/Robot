@@ -83,7 +83,9 @@ public class CoordinatePicker extends Fragment {
 		return mView;
 	}
 
-	// go back to previous fragment
+	/**
+	 * go back to previous fragment
+	 */
 	private void closeFragment() {
 		getActivity().getSupportFragmentManager().popBackStack();
 	}

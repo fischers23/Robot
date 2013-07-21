@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
 import com.robot.connection.BluetoothBroadcastReceiver;
@@ -35,6 +33,7 @@ public class ConnectivitySelector extends Fragment {
 	View mContentView;
 	Context mContext;
 
+	// variables for the broadcastreceiver
 	BluetoothBroadcastReceiver bcr = null;
 	private final IntentFilter intentFilter = new IntentFilter();
 
@@ -51,7 +50,7 @@ public class ConnectivitySelector extends Fragment {
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 
 		// create the broadcast receiver
-		bcr = new BluetoothBroadcastReceiver(getActivity());
+		bcr = new BluetoothBroadcastReceiver();
 
 		// This section handles the Bluetooth Button
 		ImageButton connectBTButton = (ImageButton) mContentView.findViewById(R.id.connect_bluetooth);
@@ -118,8 +117,11 @@ public class ConnectivitySelector extends Fragment {
 		return mContentView;
 	}
 
-	// here we handle the bluetoot connection
-	// this is called by the menu in the fragment_control_unit
+	/**
+	 * turns the bluetooth connection on (true) or off (false)
+	 * gets called by the menu in the fragment_control_unit
+	 * @param connect
+	 */
 	public void connectBT(boolean connect) {
 		// connect
 		if (!bcr.isBTconnected() && connect) {
@@ -144,10 +146,6 @@ public class ConnectivitySelector extends Fragment {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public void setDestinationLocation(LatLng location) {
-		Log.d("CoordinatePicker", location.toString());
 	}
 
 	@Override

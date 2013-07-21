@@ -32,7 +32,8 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	SensorManager sensorManager = null;
 	Sensor sensor;
 	float mLastY;
-	// the speed control custom view
+	
+	// speed control custom view
 	ImageView speed_view;
 	ImageView steer_view;
 	float last_y = 0;
@@ -172,9 +173,12 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		// TODO Auto-generated method stub
 	}
 
-	// possibility to set to control instance
-	// this way the Control unit can be kept independent
-	// of the underlying implementation (wifi/bluetooth)
+	/**
+	 *  possibility to set to control instance
+	 *  this way the control unit can be kept independent
+	 *  of the underlying implementation (wifi/bluetooth)
+	 * @param ac
+	 */
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
@@ -224,7 +228,9 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		sensorManager.unregisterListener(this);
 	}
 
-	// This class toggles the gyro sensor
+	/**
+	 * gyro sensor toggle control
+	 */
 	public void enableGyro() {
 		gyroEnabled = !gyroEnabled;
 		if (!gyroEnabled)
