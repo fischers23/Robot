@@ -32,7 +32,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	SensorManager sensorManager = null;
 	Sensor sensor;
 	float mLastY;
-	boolean isStraight;
+	boolean isStraight = true;
 	
 	// speed control custom view
 	ImageView speed_view;
@@ -188,7 +188,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 
-		isStraight = true;
 
 		float noise = (float) 0.1;
 		float y = event.values[1];
