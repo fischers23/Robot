@@ -14,7 +14,6 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,12 +41,15 @@ public class PeerList extends ListFragment implements PeerListListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		this.setListAdapter(new PeerListAdapter(getActivity(), R.layout.peer_list_item, peers));
+		// connect the list adapter to the lokal list of peers
+		this.setListAdapter(new PeerListAdapter(getActivity(),
+				R.layout.peer_list_item, peers));
 
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 
@@ -55,17 +57,23 @@ public class PeerList extends ListFragment implements PeerListListener {
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
 		// intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+		intentFilter
+				.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
 
-		mContentView = inflater.inflate(R.layout.fragment_wifi_list, container, false);
-		mManager = (WifiP2pManager) getActivity().getSystemService(Context.WIFI_P2P_SERVICE);
-		mChannel = mManager.initialize(getActivity(), getActivity().getMainLooper(), null);
+		// request wifi services from system
+		mContentView = inflater.inflate(R.layout.fragment_wifi_list, container,
+				false);
+		mManager = (WifiP2pManager) getActivity().getSystemService(
+				Context.WIFI_P2P_SERVICE);
+		mChannel = mManager.initialize(getActivity(), getActivity()
+				.getMainLooper(), null);
 
 		wrec = new WifiListReceiver(mManager, mChannel, this);
 
+		// initiate peer discovery
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 			@Override
 			public void onSuccess() {
@@ -85,6 +93,9 @@ public class PeerList extends ListFragment implements PeerListListener {
 	@Override
 	public void onPeersAvailable(WifiP2pDeviceList peerList) {
 
+		// if peers are available we get notified.
+		// Take the delivered peers, put them in our lokal list and notify the
+		// listadapter that this list has changed
 		Log.d("PeerList", "got some Peers");
 		peers.clear();
 		peers.addAll(peerList.getDeviceList());
@@ -115,7 +126,8 @@ public class PeerList extends ListFragment implements PeerListListener {
 	}
 
 	/**
-	 * Array adapter for ListFragment that maintains WifiP2pDevice list.
+	 * Array adapter for ListFragment that maintains WifiP2pDevice list. This
+	 * adapter handles the listview and styles them according to an layout xml
 	 */
 	private class PeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
@@ -126,28 +138,30 @@ public class PeerList extends ListFragment implements PeerListListener {
 		 * @param textViewResourceId
 		 * @param objects
 		 */
-		public PeerListAdapter(Context context, int textViewResourceId, List<WifiP2pDevice> objects) {
+		public PeerListAdapter(Context context, int textViewResourceId,
+				List<WifiP2pDevice> objects) {
 			super(context, textViewResourceId, objects);
 			items = objects;
 
 		}
 
 		@Override
+		/**
+		 * We override the getView method to make it possible 
+		 * to style the list elements the way we want.
+		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
 			if (v == null) {
-				LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater vi = (LayoutInflater) getActivity()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = vi.inflate(R.layout.peer_list_item, null);
 			}
 			WifiP2pDevice device = items.get(position);
 			if (device != null) {
 				TextView top = (TextView) v.findViewById(R.id.device_name);
-				TextView bottom = (TextView) v.findViewById(R.id.device_details);
 				if (top != null) {
 					top.setText(device.deviceName);
-				}
-				if (bottom != null) {
-					// bottom.setText(getDeviceStatus(device.status));
 				}
 			}
 
@@ -157,18 +171,24 @@ public class PeerList extends ListFragment implements PeerListListener {
 	}
 
 	/**
-	 * Initiate a connection with the peer.
+	 * Initiate a connection with the selected peer.
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
+		WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(
+				position);
 
+		// show the detail fragment there a connection can be initiated
 		PeerDetail pd = new PeerDetail();
 		pd.init(device, mManager, mChannel);
-		getFragmentManager().beginTransaction().replace(R.id.mainFragment, pd).addToBackStack("pd").commit();
+		getFragmentManager().beginTransaction().replace(R.id.mainFragment, pd)
+				.addToBackStack("pd").commit();
 
 	}
 
+	/**
+	 * Method to initiate peer discovery. Used by the menu item
+	 */
 	public void discoverPeers() {
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 			@Override
@@ -186,10 +206,11 @@ public class PeerList extends ListFragment implements PeerListListener {
 	public void onResume() {
 		super.onResume();
 		getActivity().registerReceiver(wrec, intentFilter);
-		WifiManager wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
-		 if (!wifi.isWifiEnabled()){
-			 wifi.setWifiEnabled(true);
-		 }
+		WifiManager wifi = (WifiManager) getActivity().getSystemService(
+				Context.WIFI_SERVICE);
+		if (!wifi.isWifiEnabled()) {
+			wifi.setWifiEnabled(true);
+		}
 	}
 
 	public void onPause() {
@@ -198,6 +219,10 @@ public class PeerList extends ListFragment implements PeerListListener {
 	}
 }
 
+/**
+ * Broadcastreceiver that handles only the wifi direkt related intents
+ * 
+ */
 class WifiListReceiver extends BroadcastReceiver {
 
 	private WifiP2pManager mManager;
@@ -225,13 +250,9 @@ class WifiListReceiver extends BroadcastReceiver {
 		} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 			Log.d("GBR", "Peers available");
 			if (mManager != null) {
-				// mActivity.setContentView(R.layout.activity_detect_peers);
-				// mManager.requestPeers(mChannel,
-				// (PeerListListener) mActivity.getFragmentManager()
-				// .findFragmentById(R.id.mainFragment));
-				//
-				Log.d("WIFIReceiver", "get Peers");
 
+				Log.d("WIFIReceiver", "get Peers");
+				// peers are available...get them
 				mManager.requestPeers(mChannel, pl);
 
 			}

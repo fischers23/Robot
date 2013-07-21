@@ -19,7 +19,6 @@ public class TransferService extends IntentService {
 
 	public TransferService(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TransferService() {
@@ -29,8 +28,12 @@ public class TransferService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
+		// check the intent if it is the right one. If so extract the IP and
+		// port of the file server. Then open a connection an send the message
+		// that is delivered in the intent.
 		Log.d("TransferService", "handle intent");
 		if (intent.getAction().equals(ACTION_SEND_FILE)) {
+			// read message, IP and port from intent
 			String text = intent.getExtras().getString(EXTRAS_SEND_TEXT);
 			String host = intent.getExtras().getString(
 					EXTRAS_GROUP_OWNER_ADDRESS);
@@ -38,6 +41,7 @@ public class TransferService extends IntentService {
 			int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
 
 			try {
+				// open connection
 				Log.d("TransferService", "Opening client socket - ");
 				socket.bind(null);
 				socket.connect((new InetSocketAddress(host, port)),
@@ -45,6 +49,7 @@ public class TransferService extends IntentService {
 
 				Log.d("TransferService",
 						"Client socket - " + socket.isConnected());
+				// send message
 				OutputStream stream = socket.getOutputStream();
 				stream.write(text.getBytes());
 			} catch (IOException e) {
@@ -65,7 +70,5 @@ public class TransferService extends IntentService {
 		}
 
 	}
-
-
 
 }

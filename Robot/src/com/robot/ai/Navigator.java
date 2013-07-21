@@ -90,8 +90,7 @@ public class Navigator implements SensorEventListener, LocationListener {
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
-
+		// nothing to do here...
 	}
 
 	/**
@@ -101,7 +100,8 @@ public class Navigator implements SensorEventListener, LocationListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 
-		// calculates the current azimuth, pitch and roll
+		// calculates the current azimuth based on values of magnetic and
+		// acceleration sensor
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_ACCELEROMETER:
 			valuesAccelerometer = event.values.clone();
@@ -115,22 +115,25 @@ public class Navigator implements SensorEventListener, LocationListener {
 				valuesAccelerometer, valuesMagneticField);
 
 		if (success) {
+			// calculate the azimuth (rotation around z-axis)
 			float[] remappedR = new float[9];
 			SensorManager.remapCoordinateSystem(matrixR, SensorManager.AXIS_X,
 					SensorManager.AXIS_Z, remappedR);
 			SensorManager.getOrientation(matrixR, matrixValues);
 
 			azimuth = (float) Math.round(Math.toDegrees(matrixValues[0]));
-			azimuth += 90; // correction due to landscape orientation
+			// correction due to landscape orientation
+			azimuth += 90;
+			// translate to values from 0 to 360 (degrees)
 			azimuth = (azimuth + 360) % 360;
-			
-			if (Math.abs(lastAzi - azimuth) > 10 && frag != null){
+
+			// if the AI fragment is active redraw the arrow (that points
+			// towards the destination) to prevent the UI from freezing only
+			// update the image if the angle has changed by more than 10 degrees
+			if (Math.abs(lastAzi - azimuth) > 10 && frag != null) {
 				lastAzi = azimuth;
 				((AIDriver) frag).drawBearing();
 			}
-			// readingAzimuth.setText("Azimuth: " + String.valueOf(azimuth));
-			// readingPitch.setText("Pitch: " + String.valueOf(pitch));
-			// readingRoll.setText("Roll: " + String.valueOf(roll));
 		}
 	}
 
@@ -161,36 +164,34 @@ public class Navigator implements SensorEventListener, LocationListener {
 		return currentPos.bearingTo(dest);
 	}
 
+	/**
+	 * 
+	 * @return current azimuth
+	 */
 	public float getAzimuth() {
 		return azimuth;
 	}
 
-	/**
-	 * This callback method updates the bearing to the destination an causes the
-	 * arrow to redraw (if an destination is set)
-	 */
 	@Override
 	public void onLocationChanged(Location location) {
-
-//		if (frag != null)
-//			((AIDriver) frag).drawBearing();
+		// nothing to do here hence the updates from the onSensorChanged method
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
+		// nothing to do here...
 
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
+		// nothing to do here...
 
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
+		// nothing to do here...
 
 	}
 
