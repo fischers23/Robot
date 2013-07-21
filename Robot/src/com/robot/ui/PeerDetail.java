@@ -17,6 +17,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +44,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	private ArduinoCommands ac;
 	private ControlUnits cu;
 	private FileServerAsync fs = null;
+	private boolean connected = false;
 
 	public void init(WifiP2pDevice target, WifiP2pManager man, Channel chan) {
 
@@ -58,61 +62,6 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 				container, false);
 
 		wdr = new WifiDetailReceiver(mManager, mChannel, this);
-
-		mContentView.findViewById(R.id.btn_connect).setOnClickListener(
-				new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						WifiP2pConfig config = new WifiP2pConfig();
-						config.deviceAddress = device.deviceAddress;
-						config.wps.setup = WpsInfo.PBC;
-
-						// connect to device
-						mManager.connect(mChannel, config,
-								new ActionListener() {
-
-									@Override
-									public void onSuccess() {
-										Log.d("PeerDetail", "conecting...");
-									}
-
-									@Override
-									public void onFailure(int reason) {
-										Toast.makeText(getActivity(),
-												"Connect failed. Retry.",
-												Toast.LENGTH_SHORT).show();
-									}
-								});
-
-					}
-				});
-
-		mContentView.findViewById(R.id.btn_disconnect).setVisibility(View.GONE);
-		mContentView.findViewById(R.id.btn_disconnect).setOnClickListener(
-				new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// disconnect from device
-						mManager.removeGroup(mChannel, new ActionListener() {
-
-							@Override
-							public void onFailure(int reasonCode) {
-								Log.d("PeerDetail",
-										"Disconnect failed. Reason :"
-												+ reasonCode);
-
-							}
-
-							@Override
-							public void onSuccess() {
-
-							}
-
-						});
-					}
-				});
 
 		mContentView.findViewById(R.id.btn_start_client).setVisibility(
 				View.GONE);
@@ -142,6 +91,8 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
 
+		connected = true;
+		getActivity().invalidateOptionsMenu();
 		this.info = info;
 		// The owner IP is now known.
 		TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
@@ -164,10 +115,6 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 			fs.execute();
 		}
 
-		// hide the connect button
-		mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
-		mContentView.findViewById(R.id.btn_disconnect).setVisibility(
-				View.VISIBLE);
 	}
 
 	public void onResume() {
@@ -181,6 +128,73 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		intentFilter
 				.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 		getActivity().registerReceiver(wdr, intentFilter);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.wifi_detail_menu, menu);
+		if(connected){
+			menu.findItem(R.id.atn_wifi_connect).setVisible(false);
+			menu.findItem(R.id.atn_wifi_disconnect).setVisible(true);
+		}
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.atn_wifi_connect:
+			// connect via wifi direct
+			wifiConnect();
+			return true;
+		case R.id.atn_wifi_disconnect:
+			// disconnect via wifi direct
+			wifiDisconnect();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void wifiConnect() {
+		WifiP2pConfig config = new WifiP2pConfig();
+		config.deviceAddress = device.deviceAddress;
+		config.wps.setup = WpsInfo.PBC;
+
+		// connect to device
+		mManager.connect(mChannel, config, new ActionListener() {
+
+			@Override
+			public void onSuccess() {
+				Log.d("PeerDetail", "conecting...");
+			}
+
+			@Override
+			public void onFailure(int reason) {
+				Toast.makeText(getActivity(), "Connect failed. Retry.",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	private void wifiDisconnect() {
+		// disconnect from device
+		mManager.removeGroup(mChannel, new ActionListener() {
+
+			@Override
+			public void onFailure(int reasonCode) {
+				Log.d("PeerDetail", "Disconnect failed. Reason :" + reasonCode);
+
+			}
+
+			@Override
+			public void onSuccess() {
+
+			}
+
+		});
 	}
 
 	public void onPause() {

@@ -44,9 +44,10 @@ public class PeerList extends ListFragment implements PeerListListener {
 		// connect the list adapter to the lokal list of peers
 		this.setListAdapter(new PeerListAdapter(getActivity(),
 				R.layout.peer_list_item, peers));
-
 	}
 
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
