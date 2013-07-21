@@ -1,6 +1,5 @@
 package com.robot.connection;
 
-import android.util.Log;
 
 /*
  * Handler that offers simple commands and translates them to a bitstring that is 
