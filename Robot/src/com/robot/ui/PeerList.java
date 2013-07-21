@@ -7,12 +7,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -184,6 +186,10 @@ public class PeerList extends ListFragment implements PeerListListener {
 	public void onResume() {
 		super.onResume();
 		getActivity().registerReceiver(wrec, intentFilter);
+		WifiManager wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+		 if (!wifi.isWifiEnabled()){
+			 wifi.setWifiEnabled(true);
+		 }
 	}
 
 	public void onPause() {
