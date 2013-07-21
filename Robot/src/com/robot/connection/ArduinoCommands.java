@@ -1,6 +1,7 @@
 package com.robot.connection;
 
 
+
 /*
  * Handler that offers simple commands and translates them to a bitstring that is 
  * readable by the arduino devices.
@@ -236,8 +237,8 @@ public class ArduinoCommands {
 	 */
 	public void send() {
 		cHandler.sendData(send[0] + send[1] + send[2] + send[3] + send[4] + send[5] + "?");
-		// Log.d("ArduinoCommand", "" + send[0] + send[1] + send[2] + send[3] +
-		// send[4] + send[5]);
+//		 Log.d("ArduinoCommand", "" + send[0] + send[1] + send[2] + send[3] +
+//		 send[4] + send[5]);
 	}
 
 }
