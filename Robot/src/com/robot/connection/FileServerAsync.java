@@ -5,19 +5,15 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.robot.ui.ControlUnits;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 
 public class FileServerAsync extends AsyncTask<Void, Void, String> {
 
 	EditText msg;
 	Activity act;
-	private CHWifiDirect wd;
 	private ConnectionHandlerInterface cHandler;
 	private boolean listen = true;
 
@@ -41,7 +37,7 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... arg0) {
 
 		try {
-			
+
 			while (listen) {
 				ServerSocket serverSocket = new ServerSocket(8988);
 				Log.d("FileServer", "Server: Socket opened");
@@ -49,8 +45,7 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 				Log.d("FileServer", "Server: connection done");
 
 				InputStream inputstream = client.getInputStream();
-				java.util.Scanner s = new java.util.Scanner(inputstream)
-						.useDelimiter("\\A");
+				java.util.Scanner s = new java.util.Scanner(inputstream).useDelimiter("\\A");
 				String text = s.hasNext() ? s.next() : "";
 				serverSocket.close();
 				if (text != "") {
@@ -60,7 +55,7 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 					// TODO: ArduinoCommands passthrough
 					cHandler.sendData(text);
 				}
-				
+
 			}
 			return "";
 		} catch (IOException e) {

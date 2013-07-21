@@ -11,12 +11,12 @@ import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.robot.R;
 import com.robot.connection.ArduinoCommands;
@@ -45,7 +45,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 		// make known that we want to change the menu with this activity
 		setHasOptionsMenu(true);
-		Toast.makeText(getActivity(), "Press connect to start!", Toast.LENGTH_LONG).show();
 
 		// gyro stuff
 		sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -64,12 +63,12 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 					// get the height of our view
 					int height = speed_view.getHeight();
 					float y = event.getY();
-					
+
 					// do not send to often
-					if(Math.abs(last_y-y) < 20)
+					if (Math.abs(last_y - y) < 20)
 						return true;
 					last_y = y;
-					
+
 					// get the ratio
 					float ratio = 255f / (height / 2);
 
@@ -83,13 +82,14 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 					} else { // backward
 						float speed = (y - (height / 2)) * ratio;
 						if (speed <= 255f) {
-							driver.backwardWithSpeed((int)speed);
+							driver.backwardWithSpeed((int) speed);
 						} else {
 							driver.backwardWithSpeed(255);
 						}
 					}
 				}
 				if (action == MotionEvent.ACTION_UP) {
+					// stop on finger release
 					last_y = 0;
 					driver.forward(false);
 					driver.backward(false);
@@ -111,36 +111,37 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 
 					// do not send to often
 					float x = event.getX();
-					if(Math.abs(last_x-x) < 20)
+					if (Math.abs(last_x - x) < 20)
 						return true;
 					last_x = x;
-					
+
 					// get the ratio
 					float ratio = 255f / (width / 2);
 
 					if (x < width / 2) { // left
 						float speed = (((width / 2) - x) * ratio);
 						if (speed <= 255f) {
-							 driver.leftWithSpeed((int)speed);
+							driver.leftWithSpeed((int) speed);
 						} else {
 							driver.driveSpeed(255);
 						}
 					} else { // right
 						float speed = (x - (width / 2)) * ratio;
 						if (speed <= 255f) {
-							driver.rightWithSpeed((int)speed);
+							driver.rightWithSpeed((int) speed);
 						} else {
 							driver.driveSpeed(255);
 						}
 					}
 				}
 				if (action == MotionEvent.ACTION_UP) {
+					// stop on finger release
 					last_x = 0;
 					driver.left(false);
 					driver.right(false);
 				}
 				return true;
-				
+
 			}
 		});
 
@@ -149,18 +150,21 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.main_control, menu);
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-
-		// make our menu buttons visible
-		menu.findItem(R.id.atn_connect).setVisible(true);
-		menu.findItem(R.id.atn_gyro).setVisible(true);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.atn_gyro:
+			// enable the gyro steering
+			enableGyro();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -168,6 +172,9 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 		// TODO Auto-generated method stub
 	}
 
+	// possibility to set to control instance
+	// this way the Control unit can be kept independent
+	// of the underlying implementation (wifi/bluetooth)
 	public void setCommands(ArduinoCommands ac) {
 		driver = ac;
 	}
@@ -175,6 +182,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	// this part handles the steering via the phones internal gyro sensors
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+
 		boolean isStraight = true;
 
 		float noise = (float) 0.1;
@@ -203,11 +211,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
 		// register the gyro sensor
@@ -228,16 +231,6 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 			sensorLabel.setText("off");
 		else
 			sensorLabel.setText("on");
-	}
-
-	// toggle the visibility of the steering buttons as
-	// we are connected/disconnected
-	public void buttonsAvailable(int i) {
-		if (i == View.VISIBLE || i == View.INVISIBLE) {
-			getActivity().findViewById(R.id.my_speed).setVisibility(i);
-			getActivity().findViewById(R.id.my_steer).setVisibility(i);
-
-		}
 	}
 
 }

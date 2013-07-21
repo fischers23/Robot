@@ -41,34 +41,20 @@ public class AIDriver extends Fragment {
 	MenuItem i;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
 		setHasOptionsMenu(true);
 
-		arrow = BitmapFactory.decodeResource(getResources(),
-				R.drawable.button_arrow);
-		shadow = BitmapFactory.decodeResource(getResources(),
-				R.drawable.button_shadow);
+		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
+		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
 
 		navi = new Navigator(getActivity());
 
 		// initialize the Map with the Coordiate Listener
 		copi = new CoordinatePicker();
-
-		// // click on the compass to start the autonomous drive
-		// ImageView iv = (ImageView) getActivity().findViewById(R.id.compass);
-		// iv.setOnClickListener(new View.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// startAIDrive();
-		//
-		// }
-		// });
 
 		return mContentView;
 	}
@@ -108,8 +94,7 @@ public class AIDriver extends Fragment {
 		Matrix matrix = new Matrix();
 		matrix.postRotate(angle, arrow.getWidth() / 2, arrow.getHeight() / 2);
 
-		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(),
-				arrow.getHeight(), Bitmap.Config.ARGB_8888);
+		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
 
 		// Bitmap finished = Bitmap.createBitmap(arrow);
 		Canvas c = new Canvas(finished);
@@ -136,9 +121,7 @@ public class AIDriver extends Fragment {
 		case R.id.atn_open_map:
 
 			// open the map fragment
-			getFragmentManager().beginTransaction()
-					.replace(R.id.mainFragment, copi, "copi")
-					.addToBackStack("copi").commit();
+			getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
 
 			return true;
 		case R.id.atn_start_drive:
@@ -158,8 +141,7 @@ public class AIDriver extends Fragment {
 		if (loc != null) {
 			// remove hint
 			getActivity().findViewById(R.id.map_hint).setVisibility(View.GONE);
-			getActivity().findViewById(R.id.compass)
-					.setVisibility(View.VISIBLE);
+			getActivity().findViewById(R.id.compass).setVisibility(View.VISIBLE);
 
 			drawBearing();
 		}
@@ -198,14 +180,10 @@ public class AIDriver extends Fragment {
 						alignToDest();
 					}
 					driver.forwardWithSpeed(255);
-					try {
-						this.wait(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					SystemClock.sleep(1000);
 				}
 			}
+
 			private boolean destinationReached() {
 
 				if (navi.getPosition().distanceTo(loc) <= 5) {
@@ -225,12 +203,7 @@ public class AIDriver extends Fragment {
 						driver.leftWithSpeed(255);
 					else
 						driver.rightWithSpeed(255);
-					try {
-						this.wait(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					SystemClock.sleep(1000);
 				}
 				driver.stop();
 			}
@@ -238,11 +211,5 @@ public class AIDriver extends Fragment {
 		t.start();
 
 	}
-
-	/**
-	 * 
-	 * @return boolean
-	 */
-	
 
 }
