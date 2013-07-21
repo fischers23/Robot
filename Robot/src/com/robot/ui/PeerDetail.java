@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,6 +118,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		if (info.groupFormed && info.isGroupOwner) {
 			fs = new FileServerAsync(getActivity());
 			fs.execute();
+			mContentView.findViewById(R.id.wifi_server).setVisibility(View.VISIBLE);
 		}
 
 	}
