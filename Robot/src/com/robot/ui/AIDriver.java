@@ -43,18 +43,15 @@ public class AIDriver extends Fragment {
 	boolean fragActive;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
 		setHasOptionsMenu(true);
 
-		arrow = BitmapFactory.decodeResource(getResources(),
-				R.drawable.button_arrow);
-		shadow = BitmapFactory.decodeResource(getResources(),
-				R.drawable.button_shadow);
+		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
+		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
 
 		navi = new Navigator(getActivity());
 
@@ -107,8 +104,7 @@ public class AIDriver extends Fragment {
 		matrix.postRotate(angle, arrow.getWidth() / 2, arrow.getHeight() / 2);
 
 		// create a new empty image
-		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(),
-				arrow.getHeight(), Bitmap.Config.ARGB_8888);
+		Bitmap finished = Bitmap.createBitmap(arrow.getWidth(), arrow.getHeight(), Bitmap.Config.ARGB_8888);
 
 		// draw the rotated image and the shadow above
 		Canvas c = new Canvas(finished);
@@ -135,9 +131,7 @@ public class AIDriver extends Fragment {
 		case R.id.atn_open_map:
 
 			// open the map fragment
-			getFragmentManager().beginTransaction()
-					.replace(R.id.mainFragment, copi, "copi")
-					.addToBackStack("copi").commit();
+			getFragmentManager().beginTransaction().replace(R.id.mainFragment, copi, "copi").addToBackStack("copi").commit();
 
 			return true;
 		case R.id.atn_start_drive:
@@ -158,8 +152,7 @@ public class AIDriver extends Fragment {
 		if (loc != null) {
 			// remove hint
 			getActivity().findViewById(R.id.map_hint).setVisibility(View.GONE);
-			getActivity().findViewById(R.id.compass)
-					.setVisibility(View.VISIBLE);
+			getActivity().findViewById(R.id.compass).setVisibility(View.VISIBLE);
 
 			drawBearing();
 		}
@@ -243,14 +236,19 @@ public class AIDriver extends Fragment {
 				while (Math.abs(deltaAngle()) > 30 && fragActive) {
 					float az = navi.getAzimuth();
 					float angle;
-					if (az < bearing)
+					if (az < bearing) {
 						angle = (Math.abs(bearing - az));
-					else
+					} else {
 						angle = (360 - Math.abs(bearing - az));
-					if (angle <= 180)
-						driver.leftWithServo(255);
-					else
+					}
+					Log.d("AI", ""+angle);
+					if (angle <= 180) {
+						Log.d("AI", "right");
 						driver.rightWithServo(255);
+					} else {
+						Log.d("AI", "left");
+						driver.leftWithServo(255);
+					}
 					SystemClock.sleep(1000);
 				}
 				driver.stop();
