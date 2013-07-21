@@ -104,6 +104,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 		ImageButton b = (ImageButton) mContentView.findViewById(R.id.btn_start_client);
 		b.setVisibility((info.isGroupOwner == true) ? View.GONE : View.VISIBLE);
+		
 
 		// InetAddress from WifiP2pInfo struct.
 		view = (TextView) mContentView.findViewById(R.id.device_info);
