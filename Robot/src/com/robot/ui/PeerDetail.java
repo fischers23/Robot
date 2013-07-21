@@ -22,7 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,13 +93,16 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 		connected = true;
 		getActivity().invalidateOptionsMenu();
+		getActivity().findViewById(R.id.wifi_hint).setVisibility(View.GONE);
+		getActivity().findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
 		this.info = info;
 		// The owner IP is now known.
+		mContentView.findViewById(R.id.device_detail).setVisibility(View.VISIBLE);
 		TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
 		view.setText("Am I the Groupowner? "
 				+ ((info.isGroupOwner == true) ? "YES" : "NO"));
 
-		Button b = (Button) mContentView.findViewById(R.id.btn_start_client);
+		ImageButton b = (ImageButton) mContentView.findViewById(R.id.btn_start_client);
 		b.setVisibility((info.isGroupOwner == true) ? View.GONE : View.VISIBLE);
 
 		// InetAddress from WifiP2pInfo struct.
