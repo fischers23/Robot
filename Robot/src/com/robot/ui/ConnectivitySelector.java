@@ -206,7 +206,7 @@ public class ConnectivitySelector extends Fragment {
 						// open connection in a thread to avoid ui freezes
 						cHandler.establishConnection();
 					} catch (IOException e) {
-						e.printStackTrace();
+						Log.e("ConnectivitySelector","Error with connecting to bluetooth.");
 					}
 				}
 			});
@@ -218,7 +218,7 @@ public class ConnectivitySelector extends Fragment {
 				// if we are already connected -> disconnect
 				cHandler.closeConnection();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e("ConnectivitySelector","Error with disconnecting from bluetooth.");
 			}
 		}
 	}
