@@ -42,7 +42,8 @@ public class ConnectivitySelector extends Fragment {
 
 	// variables for the broadcastreceiver
 	BluetoothBroadcastReceiver bcr = null;
-	private final IntentFilter intentFilter = new IntentFilter();
+	private IntentFilter intentFilter;
+	boolean keepBTbcr = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,12 +88,13 @@ public class ConnectivitySelector extends Fragment {
 			
 		// register BlueTooth intent filter to get nofified as BT is connected
 		// or disconnected
+		intentFilter = new IntentFilter();
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED);
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 
 		// create the broadcast receiver
-		bcr = new BluetoothBroadcastReceiver();
+		bcr = new BluetoothBroadcastReceiver(getActivity());
 
 		// This section handles the Bluetooth Button
 		ImageButton connectBTButton = (ImageButton) mContentView.findViewById(R.id.connect_bluetooth);
@@ -200,6 +202,7 @@ public class ConnectivitySelector extends Fragment {
 	public void connectBT(boolean connect) {
 		// connect
 		if (!bcr.isBTconnected() && connect) {
+			keepBTbcr = true;
 			Thread connectionThread = new Thread(new Runnable() {
 				public void run() {
 					try {
@@ -227,7 +230,8 @@ public class ConnectivitySelector extends Fragment {
 	public void onPause() {
 		super.onPause();
 		// unregister the intent filters together with the broadcastreceiver
-		getActivity().unregisterReceiver(bcr);
+		if(!keepBTbcr)
+			getActivity().unregisterReceiver(bcr);
 	}
 
 	@Override
@@ -237,6 +241,7 @@ public class ConnectivitySelector extends Fragment {
 		getActivity().registerReceiver(bcr, intentFilter);
 
 		// close existing BT connections
+		keepBTbcr = false;
 		connectBT(false);
 	}
 
@@ -246,7 +251,6 @@ public class ConnectivitySelector extends Fragment {
 		try {
 			if (cHandler != null) {
 				// close connection on exit
-//				cHandler.closeConnection();
 				connectBT(false);
 			}
 		} catch (Exception e) {
