@@ -1,7 +1,5 @@
 package com.robot.ui;
 
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
