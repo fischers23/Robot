@@ -154,7 +154,7 @@ public class ControlUnits extends Fragment implements SensorEventListener {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.main_control, menu);
+		inflater.inflate(R.menu.controlunits, menu);
 	}
 
 	@Override

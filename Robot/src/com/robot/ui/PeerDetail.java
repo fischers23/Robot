@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,36 +54,30 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		mContentView = inflater.inflate(R.layout.fragment_wifi_detail,
-				container, false);
+		mContentView = inflater.inflate(R.layout.fragment_wifi_detail, container, false);
 
 		wdr = new WifiDetailReceiver(mManager, mChannel, this);
 
-		mContentView.findViewById(R.id.btn_start_client).setVisibility(
-				View.GONE);
-		mContentView.findViewById(R.id.btn_start_client).setOnClickListener(
-				new View.OnClickListener() {
+		mContentView.findViewById(R.id.btn_start_client).setVisibility(View.GONE);
+		mContentView.findViewById(R.id.btn_start_client).setOnClickListener(new View.OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 
-						// if a connection is established this button is shown.
-						// If it is pushed it makes sure that the control units
-						// fragment is shown an the commands are sent via wifi
-						wifi = new CHWifiDirect(getActivity(), info);
-						ac = new ArduinoCommands(wifi);
-						cu = new ControlUnits();
-						cu.setCommands(ac);
-						getFragmentManager().beginTransaction()
-								.replace(R.id.mainFragment, cu)
-								.addToBackStack("cu").commit();
+				// if a connection is established this button is shown.
+				// If it is pushed it makes sure that the control units
+				// fragment is shown an the commands are sent via wifi
+				wifi = new CHWifiDirect(getActivity(), info);
+				ac = new ArduinoCommands(wifi);
+				cu = new ControlUnits();
+				cu.setCommands(ac);
+				getFragmentManager().beginTransaction().replace(R.id.mainFragment, cu).addToBackStack("cu").commit();
 
-					}
-				});
+			}
+		});
 
 		return mContentView;
 	}
@@ -100,17 +93,14 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		// The owner IP is now known.
 		mContentView.findViewById(R.id.device_detail).setVisibility(View.VISIBLE);
 		TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
-		view.setText("Am I the Groupowner? "
-				+ ((info.isGroupOwner == true) ? "YES" : "NO"));
+		view.setText("Am I the Groupowner? " + ((info.isGroupOwner == true) ? "YES" : "NO"));
 
 		ImageButton b = (ImageButton) mContentView.findViewById(R.id.btn_start_client);
 		b.setVisibility((info.isGroupOwner == true) ? View.GONE : View.VISIBLE);
-		
 
 		// InetAddress from WifiP2pInfo struct.
 		view = (TextView) mContentView.findViewById(R.id.device_info);
-		view.setText("Group Owner IP - "
-				+ info.groupOwnerAddress.getHostAddress());
+		view.setText("Group Owner IP - " + info.groupOwnerAddress.getHostAddress());
 
 		// After the group negotiation, we assign the group owner as the file
 		// server. The file server is single threaded, single connection server
@@ -129,10 +119,8 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 		// add necessary intent values to be matched for wifi direct and
 		// register the receiver
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-		intentFilter
-				.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-		intentFilter
-				.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 		getActivity().registerReceiver(wdr, intentFilter);
 		setHasOptionsMenu(true);
 	}
@@ -141,7 +129,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.wifi_detail_menu, menu);
-		if(connected){
+		if (connected) {
 			menu.findItem(R.id.atn_wifi_connect).setVisible(false);
 			menu.findItem(R.id.atn_wifi_disconnect).setVisible(true);
 		}
@@ -179,8 +167,7 @@ public class PeerDetail extends Fragment implements ConnectionInfoListener {
 
 			@Override
 			public void onFailure(int reason) {
-				Toast.makeText(getActivity(), "Connect failed. Retry.",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -224,8 +211,7 @@ class WifiDetailReceiver extends BroadcastReceiver {
 	private Channel mChannel;
 	private PeerDetail pl;
 
-	public WifiDetailReceiver(WifiP2pManager manager, Channel channel,
-			PeerDetail peerDetail) {
+	public WifiDetailReceiver(WifiP2pManager manager, Channel channel, PeerDetail peerDetail) {
 		mManager = manager;
 		mChannel = channel;
 		pl = peerDetail;
@@ -241,10 +227,8 @@ class WifiDetailReceiver extends BroadcastReceiver {
 				return;
 			}
 			Log.d("WifiDetailReceiver", "Manager != null");
-			NetworkInfo networkInfo = (NetworkInfo) intent
-					.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-			Log.d("WifiDetailReceiver",
-					(networkInfo.isConnected() == true) ? "true" : "false");
+			NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+			Log.d("WifiDetailReceiver", (networkInfo.isConnected() == true) ? "true" : "false");
 			if (networkInfo.isConnected()) {
 				// we are connected with the other device, request connection
 				// info to find group owner IP

@@ -12,6 +12,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -39,10 +40,11 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 
 	Activity mActivity;
 
-	public CHBluetooth(Activity activity, String deviceName) {
+	public CHBluetooth(Activity activity) {
 		mActivity = activity;
-		this.deviceName = deviceName;
 		enableBluetooth();
+		SharedPreferences settings = mActivity.getSharedPreferences("config", 0);
+		deviceName = settings.getString("name", "not_set");
 	}
 
 	/**
@@ -68,6 +70,9 @@ public class CHBluetooth implements ConnectionHandlerInterface {
 	 * @return
 	 */
 	public boolean findArduino() {
+		
+		
+		
 		// this case assumes we already found the Arduino
 		if (mmDevice != null && mmDevice.getName().equals(deviceName))
 			return true;

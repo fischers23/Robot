@@ -2,11 +2,18 @@ package com.robot.ui;
 
 import java.io.IOException;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -43,6 +50,41 @@ public class ConnectivitySelector extends Fragment {
 		mContentView = inflater.inflate(R.layout.fragment_connectivity_selector, container, false);
 		mContext = getActivity();
 
+		// register menu
+		setHasOptionsMenu(true);
+		
+		
+		//
+		SharedPreferences settings = getActivity().getSharedPreferences("config", 0);
+		String deviceName = settings.getString("name", "not_set");
+		Log.d("ConnectivitySector",deviceName);
+		if(deviceName.equals("not_set")) {
+			// instantiate an AlertDialog.Builder with its constructor
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+			// chain together various setter methods to set the dialog characteristics
+			builder.setMessage("Do you want to select one now?")
+			       .setTitle("No Arduino selected");
+			
+			// Add the buttons
+			builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			               //show dialog
+			        	   showDevicePicker();
+			           }
+			       });
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			               // User cancelled the dialog
+			        	   // do nothing
+			           }
+			       });
+
+			// 3. Get the AlertDialog from create()
+			AlertDialog dialog = builder.create();
+			dialog.show();
+		}
+			
 		// register BlueTooth intent filter to get nofified as BT is connected
 		// or disconnected
 		intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED);
@@ -63,12 +105,12 @@ public class ConnectivitySelector extends Fragment {
 
 				// if not already done instantiate the BT connection handler
 				if (cHandler == null)
-					cHandler = new CHBluetooth(getActivity(), "Arduino");
+					cHandler = new CHBluetooth(getActivity());
 
 				// create the driver class
 				driver = new ArduinoCommands(cHandler);
 				cu.setCommands(driver);
-				
+
 				// connect BT
 				connectBT(true);
 
@@ -101,12 +143,12 @@ public class ConnectivitySelector extends Fragment {
 
 				// if not already done instantiate the BT connection handler
 				if (cHandler == null)
-					cHandler = new CHBluetooth(getActivity(), "Arduino");
+					cHandler = new CHBluetooth(getActivity());
 
 				// create the driver class
 				driver = new ArduinoCommands(cHandler);
 				aid.setCommands(driver);
-				
+
 				// connect BT
 				connectBT(true);
 
@@ -117,9 +159,42 @@ public class ConnectivitySelector extends Fragment {
 		return mContentView;
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.connectivityselector, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.atn_device_picker:
+
+			// show dialog
+			showDevicePicker();
+
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	
 	/**
-	 * turns the bluetooth connection on (true) or off (false)
-	 * gets called by the menu in the fragment_control_unit
+	 * Shows a dialog to the user to select a paired Arduino device
+	 */
+	private void showDevicePicker() {
+		// create instance of the fragment
+		 DevicePicker dp = new DevicePicker();
+		 
+		// open the device list picker dialog
+		 dp.show(getFragmentManager(), "NoticeDialogFragment");
+	}
+	
+	/**
+	 * turns the bluetooth connection on (true) or off (false) gets called by
+	 * the menu in the fragment_control_unit
+	 * 
 	 * @param connect
 	 */
 	public void connectBT(boolean connect) {
@@ -171,7 +246,8 @@ public class ConnectivitySelector extends Fragment {
 		try {
 			if (cHandler != null) {
 				// close connection on exit
-				cHandler.closeConnection();
+//				cHandler.closeConnection();
+				connectBT(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

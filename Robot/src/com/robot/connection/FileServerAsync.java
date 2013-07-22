@@ -26,7 +26,7 @@ public class FileServerAsync extends AsyncTask<Void, Void, String> {
 		this.act = act;
 		// if not already done instantiate the BT connection handler
 		if (cHandler == null) {
-			cHandler = new CHBluetooth(act, "Arduino");
+			cHandler = new CHBluetooth(act);
 			try {
 				cHandler.establishConnection();
 			} catch (IOException e) {
