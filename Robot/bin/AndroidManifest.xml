@@ -51,7 +51,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAGZPpUWlim7OwtdopOH9ym-n6KZSTXfj4" />
+            android:value="AIzaSyB-T93eXL6PgUH8ZqAzarnF0X4TIQPMtA8" />
         <service android:name="com.robot.connection.TransferService"></service>
     </application>
 

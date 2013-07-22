@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 
 public class DevicePicker extends DialogFragment {
 
@@ -61,6 +62,8 @@ public class DevicePicker extends DialogFragment {
 		int index = 0;
 		while (iter.hasNext()) {
 			devices[index] = iter.next().getName();
+			Log.d("DevicePicker", devices[index]);
+			index++;
 		}
 
 		// create the list

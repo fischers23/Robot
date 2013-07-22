@@ -1,5 +1,8 @@
 package com.robot.ui;
 
+import java.util.regex.Pattern;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,6 +10,7 @@ import android.graphics.Matrix;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.robot.R;
@@ -41,6 +46,10 @@ public class AIDriver extends Fragment {
 	MenuItem i;
 
 	boolean fragActive;
+	
+	boolean threadRunning = false;
+	private Vibrator myVib;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,11 +57,17 @@ public class AIDriver extends Fragment {
 
 		mContentView = inflater.inflate(R.layout.fragment_ai, container, false);
 
+		// set menu
 		setHasOptionsMenu(true);
+		
+		// init vibrate
+		myVib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
+		// init bitmaps
 		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.button_arrow);
 		shadow = BitmapFactory.decodeResource(getResources(), R.drawable.button_shadow);
 
+		// create navigator
 		navi = new Navigator(getActivity());
 
 		// initialize the Map with the Coordiate Listener
@@ -184,14 +199,26 @@ public class AIDriver extends Fragment {
 	 */
 	public void startAIDrive() {
 
+		// avoid multiple threads
+		if(threadRunning)
+			return;
+		
+		threadRunning = true;
+		
+		Toast.makeText(getActivity(), "Autonomous drive activated. \nWait 20 seconds to start. \nPlease place the device on the car!", Toast.LENGTH_LONG).show();
+		
 		Thread t = new Thread(new Runnable() {
 
 			public void run() {
 				while (fragActive) {
 					// wait 20sec to mount phone to car
-					SystemClock.sleep(20000);
-					Log.d("AIDriver", "Waited 20secs");
-
+					SystemClock.sleep(14000);
+					// vibrate countdown
+					long[] pattern = { 0, 100, 2000, 400, 2000, 1500};
+					myVib.vibrate(pattern, -1);
+					SystemClock.sleep(6000);
+					
+					
 					// begin AI drive by turning towards the destination
 					alignToDest();
 
@@ -211,8 +238,13 @@ public class AIDriver extends Fragment {
 
 					// destination reached -> stop the car
 					driver.stop();
+					
+					// reset boolean
+					threadRunning = false;
 				}
 			}
+			
+
 
 			private boolean destinationReached() {
 
